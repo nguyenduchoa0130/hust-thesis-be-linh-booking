@@ -4,10 +4,10 @@ const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
 const express = require('express');
-const mongoose = require('mongoose');
 
 // Inject custom libraries
-const { logger } = require('./utils');
+require('./models'); // Just declare to application aware about the models then mongoose will run synchronize database
+const { logger, dbUtil } = require('./utils');
 const { HttpStatusEnum } = require('./enums');
 const { errorHandlerMiddleware } = require('./middlewares');
 
@@ -38,10 +38,7 @@ app.use(errorHandlerMiddleware);
 (async () => {
   try {
     logger.info('Connecting to mongodb database...');
-    await mongoose.connect(process.env.MONGODB_CONNECTION_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await dbUtil.connect();
     logger.info('Connected database successfully');
     app.listen(PORT, () => {
       logger.info(`Server is running on port ${PORT}`);

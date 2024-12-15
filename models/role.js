@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const roleSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    displayName: { type: String },
     desc: { type: String },
   },
   {
@@ -10,5 +11,5 @@ const roleSchema = new mongoose.Schema(
   },
 );
 
-const Roles = mongoose.model('Roles', roleSchema);
+const Roles = mongoose.model('roles', roleSchema);
 module.exports = Roles;

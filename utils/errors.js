@@ -48,4 +48,16 @@ module.exports = {
     error.statusCode = HttpStatusEnum.NotFound;
     return error;
   },
+
+  /**
+   * Create an internal error
+   * @param {string} msg
+   * @returns {Error}
+   */
+  createInternalServerError: (msg) => {
+    const error = new Error(msg);
+    error.status = 'Internal Server Error';
+    error.statusCode = HttpStatusEnum.InternalServerError;
+    return error;
+  },
 };

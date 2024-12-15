@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     avatar: { type: String },
     role: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Roles',
+      ref: 'roles',
     },
   },
   {
@@ -19,5 +19,5 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-const Users = mongoose.model('Users', userSchema);
+const Users = mongoose.model('users', userSchema);
 module.exports = Users;
