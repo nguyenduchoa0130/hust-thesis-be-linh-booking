@@ -1,0 +1,22 @@
+[
+  {
+    "name": "administrator",
+    "displayName": "Quản trị viên",
+    "desc": "Responsible for managing whole system"
+  },
+  {
+    "name": "sales",
+    "displayName": "Tư vấn viên",
+    "desc": "Responsible for managing bookings and customer interactions"
+  },
+  {
+    "name": "tour_guide",
+    "displayName": "Hướng dẫn viên tour",
+    "desc": "Provides guided tours and helps customers with their needs"
+  },
+  {
+    "name": "customer",
+    "displayName": "Khách hàng",
+    "desc": "Can make reservations, view tour details, and communicate with staff"
+  }
+]
