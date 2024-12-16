@@ -8,8 +8,8 @@ const express = require('express');
 // Inject custom libraries
 require('./models'); // Just declare to application aware about the models then mongoose will run synchronize database
 const { logger, dbUtil } = require('./utils');
-const { HttpStatusEnum } = require('./enums');
-const { errorHandlerMiddleware } = require('./middlewares');
+const { HttpStatusCodeEnum } = require('./enums');
+const { ErrorHandlerMiddleware } = require('./middlewares');
 
 // Init configurations
 const app = express();
@@ -23,16 +23,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 // Mount routes
+app.use('/api/hotels', require('./apis/hotels'));
 app.use('*', (req, res) => {
-  return res.status(HttpStatusEnum.NotFound).json({
+  return res.status(HttpStatusCodeEnum.NotFound).json({
     status: 'Not found',
-    statusCode: HttpStatusEnum.NotFound,
+    statusCode: HttpStatusCodeEnum.NotFound,
     message: `Can not find the api path: ${req.path}`,
   });
 });
 
 // Error handling middleware
-app.use(errorHandlerMiddleware);
+app.use(ErrorHandlerMiddleware);
 
 // Connect to mongodb and start the server
 (async () => {
