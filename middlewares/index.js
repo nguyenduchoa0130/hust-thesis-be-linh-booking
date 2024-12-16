@@ -1,4 +1,5 @@
 module.exports = {
-  errorHandlerMiddleware: require('./errors-handler'),
-  validationPayloadMiddleware: require('./validation-payload'),
+  ValidationPayloadMiddleware: require('./validation-payload'),
+  ErrorHandlerMiddleware: require('./errors-handler'),
+  UploadFileMiddleware: require('./upload-file'),
 };

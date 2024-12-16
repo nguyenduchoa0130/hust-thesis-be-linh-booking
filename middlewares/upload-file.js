@@ -1,11 +1,18 @@
 require('dotenv').config();
+const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const { errorsUtil } = require('../utils');
+const {
+  images: allowedImageMimeTypes,
+  videos: allowedVideoMimeTypes,
+} = require('../configs/allowed-mime-types.json');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../public/uploads/'));
+    const uploadFolderPath = path.join(__dirname, '../public/uploads/');
+    fs.mkdirSync(uploadFolderPath, { recursive: true });
+    cb(null, uploadFolderPath);
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
@@ -15,7 +22,7 @@ const storage = multer.diskStorage({
 
 // Filter to only allow image and video files
 const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = ['image/*', 'video/*'];
+  const allowedMimeTypes = [...allowedImageMimeTypes, ...allowedVideoMimeTypes];
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {

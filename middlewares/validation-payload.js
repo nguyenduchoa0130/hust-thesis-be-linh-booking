@@ -5,7 +5,7 @@ const { errorsUtil } = require('../utils');
  * @param {any} schema
  * @returns {any}
  */
-const validationPayloadMiddleware = (place, schema) => {
+const ValidationPayloadMiddleware = (place, schema) => {
   return (req, res, next) => {
     const { error } = schema.validate(req[place]);
     if (error) {
@@ -16,4 +16,4 @@ const validationPayloadMiddleware = (place, schema) => {
   };
 };
 
-module.exports = validationPayloadMiddleware;
+module.exports = ValidationPayloadMiddleware;
