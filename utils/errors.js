@@ -9,7 +9,7 @@ module.exports = {
   createBadRequest: (msg) => {
     const error = new Error(msg);
     error.status = 'Bad Request';
-    error.statusCode = HttpStatusCodeEnum.BadGateway;
+    error.statusCode = HttpStatusCodeEnum.BadRequest;
     return error;
   },
 

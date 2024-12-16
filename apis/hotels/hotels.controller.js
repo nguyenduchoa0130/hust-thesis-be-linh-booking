@@ -21,8 +21,17 @@ class HotelController {
   });
 
   createHotel = catchAsync(async (req, res) => {
-    const hotel = await HotelService.create(req.body);
+    // Check existing
+    const filterQuery = {
+      name: new RegExp(req.body.name, 'i'),
+      address: new RegExp(req.body.address, 'i'),
+    };
+    const existingHotels = await HotelService.getAll(filterQuery);
+    if (existingHotels.length) {
+      throw errorsUtil.createBadRequest(`Hotel with the same name and address already exists`);
+    }
     // Create hotel images
+    const hotel = await HotelService.create(req.body);
     const imageFiles = fileUtil.extract(req, 'images');
     if (imageFiles.length) {
       const hotelImagePayloads = this.constructFilePayloads(req, imageFiles);
@@ -46,10 +55,24 @@ class HotelController {
     }
     const { id } = req.params;
     const payload = { ...req.body };
+    // Check existing hotel
     const hotel = await HotelService.getById(id);
     if (!hotel) {
       throw errorsUtil.createNotFound(`Can't find hotel with id ${id}`);
     }
+    // Check new name and address
+    if (payload.name && payload.address) {
+      const filterQuery = {
+        _id: { $ne: id },
+        name: new RegExp(payload.name, 'i'),
+        address: new RegExp(payload.address, 'i'),
+      };
+      const existingHotels = await HotelService.getAll(filterQuery);
+      if (existingHotels.length) {
+        throw errorsUtil.createBadRequest(`Hotel with the same name and address already exists`);
+      }
+    }
+    // Update images
     if (payload.removedImages) {
       const clonedRemovedImages = [...payload.removedImages];
       delete payload.removedImages;
@@ -65,7 +88,9 @@ class HotelController {
       const hotelImages = await HotelImageService.create(hotelImagePayloads);
       payload.images = [...hotel.images, ...hotelImages.map((image) => image._id)];
     }
+    // Start updating
     await HotelService.update(id, payload);
+    // Return response
     const updatedHotel = await HotelService.getById(id);
     return res.status(200).json({
       status: HttpStatusEnum.Updated,
