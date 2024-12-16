@@ -1,4 +1,4 @@
-const { HttpStatusEnum } = require('../enums');
+const { HttpStatusCodeEnum } = require('../enums');
 
 module.exports = {
   /**
@@ -9,7 +9,7 @@ module.exports = {
   createBadRequest: (msg) => {
     const error = new Error(msg);
     error.status = 'Bad Request';
-    error.statusCode = HttpStatusEnum.BadRequest;
+    error.statusCode = HttpStatusCodeEnum.BadGateway;
     return error;
   },
 
@@ -21,7 +21,7 @@ module.exports = {
   createUnauthorized: (msg) => {
     const error = new Error(msg);
     error.status = 'Unauthorized';
-    error.statusCode = HttpStatusEnum.Unauthorized;
+    error.statusCode = HttpStatusCodeEnum.Unauthorized;
     return error;
   },
 
@@ -33,7 +33,7 @@ module.exports = {
   createForbidden: (msg) => {
     const error = new Error(msg);
     error.status = 'Forbidden';
-    error.statusCode = HttpStatusEnum.Forbidden;
+    error.statusCode = HttpStatusCodeEnum.Forbidden;
     return error;
   },
 
@@ -45,7 +45,7 @@ module.exports = {
   createNotFound: (msg) => {
     const error = new Error(msg);
     error.status = 'Not found';
-    error.statusCode = HttpStatusEnum.NotFound;
+    error.statusCode = HttpStatusCodeEnum.NotFound;
     return error;
   },
 
@@ -57,7 +57,7 @@ module.exports = {
   createInternalServerError: (msg) => {
     const error = new Error(msg);
     error.status = 'Internal Server Error';
-    error.statusCode = HttpStatusEnum.InternalServerError;
+    error.statusCode = HttpStatusCodeEnum.InternalServerError;
     return error;
   },
 };
