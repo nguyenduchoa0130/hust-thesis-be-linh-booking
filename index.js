@@ -23,7 +23,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 // Mount routes
+app.use('/api/auth', require('./apis/auth'));
+app.use('/api/roles', require('./apis/roles'));
+app.use('/api/tours', require('./apis/tours'));
 app.use('/api/hotels', require('./apis/hotels'));
+app.use('/api/tour-categories', require('./apis/tour-categories'));
 app.use('*', (req, res) => {
   return res.status(HttpStatusCodeEnum.NotFound).json({
     status: 'Not found',
