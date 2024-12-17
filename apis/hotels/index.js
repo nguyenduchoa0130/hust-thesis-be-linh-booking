@@ -1,7 +1,7 @@
 const { UploadFileMiddleware, ValidationPayloadMiddleware } = require('../../middlewares');
-const { hotelIdSchema } = require('./hotels.validations');
+const { hotelIdSchema } = require('./validations');
 const router = require('express').Router();
-const ctrl = require('./hotels.controller');
+const ctrl = require('./controller');
 
 const MAXIMUM_FILE = 5;
 

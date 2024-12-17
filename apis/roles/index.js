@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const ctrl = require('./roles.controller');
+const ctrl = require('./controller');
 
 router.get('/', ctrl.getRoles);
 
