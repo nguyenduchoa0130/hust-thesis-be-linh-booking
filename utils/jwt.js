@@ -3,14 +3,14 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   createAccessToken: (payload) => {
-    const token = jwt.sign(payload, process.env.TOKEN_SECRET || 'token_secret', {
+    const token = jwt.sign(payload, process.env.JWT_SECRET || 'token_secret', {
       expiresIn: '2h',
     });
     return token;
   },
 
   createRefreshToken: (payload) => {
-    const token = jwt.sign(payload, process.env.TOKEN_SECRET || 'token_secret', {
+    const token = jwt.sign(payload, process.env.JWT_SECRET || 'token_secret', {
       expiresIn: '3d',
     });
     return token;
@@ -18,7 +18,7 @@ module.exports = {
 
   verifyToken: (payload) => {
     try {
-      return jwt.verify(payload, process.env.TOKEN_SECRET || 'token_secret');
+      return jwt.verify(payload, process.env.JWT_SECRET || 'token_secret');
     } catch (err) {
       switch (err.code) {
         case 'TokenExpiredError':

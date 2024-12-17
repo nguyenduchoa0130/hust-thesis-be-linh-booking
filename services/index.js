@@ -1,4 +1,8 @@
 module.exports = {
-  HotelService: require('./hotel.service'),
-  HotelImageService: require('./hotel-image.service'),
+  HotelsService: require('./hotels'),
+  HotelImagesService: require('./hotel-images'),
+  ToursService: require('./tours'),
+  UsersService: require('./users'),
+  RolesService: require('./roles'),
+  TourCategoriesService: require('./tour-categories'),
 };

@@ -5,4 +5,5 @@ module.exports = {
   logger: require('./logger'),
   errorsUtil: require('./errors'),
   catchAsync: require('./catch-async'),
+  passwordUtil: require('./password'),
 };
