@@ -6,4 +6,5 @@ module.exports = {
   HotelImagesService: require('./hotel-images'),
   TourCategoriesService: require('./tour-categories'),
   TourDestinationsService: require('./tour-destinations'),
+  TourTransportsService: require('./tour-transports'),
 };
