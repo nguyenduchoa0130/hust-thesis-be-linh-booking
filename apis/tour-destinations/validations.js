@@ -2,7 +2,7 @@ const joi = require('joi');
 const { ValidationTypeEnum } = require('../../enums');
 
 module.exports = {
-  createTourCategorySchema: joi.object({
+  createTourDestinationSchema: joi.object({
     name: joi
       .string()
       .required()
@@ -10,5 +10,6 @@ module.exports = {
         [ValidationTypeEnum.Required]: 'Name is required',
       }),
     desc: joi.string().optional(),
+    ggMap: joi.string().optional(),
   }),
 };

@@ -1,11 +1,14 @@
 const router = require('express').Router();
 const ctrl = require('./controller');
 const { ValidationPayloadMiddleware } = require('../../middlewares');
-const { createTourCategorySchema } = require('./validations');
+const { createTourDestinationSchema } = require('./validations');
 
 router
   .route('/')
-  .get(ctrl.getTourCategories)
-  .post(ValidationPayloadMiddleware('body', createTourCategorySchema), ctrl.createTourCategory);
+  .get(ctrl.getTourDestinations)
+  .post(
+    ValidationPayloadMiddleware('body', createTourDestinationSchema),
+    ctrl.createTourDestination,
+  );
 
 module.exports = router;

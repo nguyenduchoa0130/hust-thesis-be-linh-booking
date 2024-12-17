@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const tourDestinationSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    desc: { type: String },
     ggMap: { type: String },
   },
   { timestamps: true },

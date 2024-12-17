@@ -28,6 +28,7 @@ app.use('/api/roles', require('./apis/roles'));
 app.use('/api/tours', require('./apis/tours'));
 app.use('/api/hotels', require('./apis/hotels'));
 app.use('/api/tour-categories', require('./apis/tour-categories'));
+app.use('/api/tour-destinations', require('./apis/tour-destinations'));
 app.use('*', (req, res) => {
   return res.status(HttpStatusCodeEnum.NotFound).json({
     status: 'Not found',

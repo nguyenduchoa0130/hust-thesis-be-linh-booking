@@ -1,29 +1,29 @@
 const { HttpStatusEnum, HttpStatusCodeEnum } = require('../../enums');
-const { TourCategoriesService } = require('../../services');
+const { TourDestinationsService } = require('../../services');
 const { catchAsync, errorsUtil } = require('../../utils');
 
 module.exports = {
-  getTourCategories: catchAsync(async (req, res) => {
-    const categories = await TourCategoriesService.getAll();
+  getTourDestinations: catchAsync(async (req, res) => {
+    const data = await TourDestinationsService.getAll();
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
-      data: categories,
+      data,
     });
   }),
 
-  createTourCategory: catchAsync(async (req, res) => {
-    const existingCategory = await TourCategoriesService.getOne({
+  createTourDestination: catchAsync(async (req, res) => {
+    const existingValue = await TourDestinationsService.getOne({
       name: new RegExp(req.body.name, 'i'),
     });
-    if (existingCategory) {
-      throw errorsUtil.createBadRequest('Tour category already exists');
+    if (existingValue) {
+      throw errorsUtil.createBadRequest('Destination already exists');
     }
-    const newCategory = await TourCategoriesService.create(req.body);
+    const data = await TourDestinationsService.create(req.body);
     return res.status(HttpStatusCodeEnum.Created).json({
       status: HttpStatusEnum.Created,
       statusCode: HttpStatusCodeEnum.Created,
-      data: newCategory,
+      data,
     });
   }),
 };
