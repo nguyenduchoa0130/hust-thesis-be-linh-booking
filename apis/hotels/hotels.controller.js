@@ -1,5 +1,5 @@
 const { HttpStatusEnum, HttpStatusCodeEnum } = require('../../enums');
-const { HotelService, HotelImageService } = require('../../services');
+const { HotelsService, HotelImagesService } = require('../../services');
 const { catchAsync, fileUtil, errorsUtil } = require('../../utils');
 
 class HotelController {
@@ -12,7 +12,7 @@ class HotelController {
   };
 
   getHotels = catchAsync(async (req, res) => {
-    const hotels = await HotelService.getAll(req.query);
+    const hotels = await HotelsService.getAll(req.query);
     return res.status(200).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
@@ -26,20 +26,20 @@ class HotelController {
       name: new RegExp(req.body.name, 'i'),
       address: new RegExp(req.body.address, 'i'),
     };
-    const existingHotels = await HotelService.getAll(filterQuery);
+    const existingHotels = await HotelsService.getAll(filterQuery);
     if (existingHotels.length) {
       throw errorsUtil.createBadRequest(`Hotel with the same name and address already exists`);
     }
     // Create hotel images
-    const hotel = await HotelService.create(req.body);
+    const hotel = await HotelsService.create(req.body);
     const imageFiles = fileUtil.extract(req, 'images');
     if (imageFiles.length) {
       const hotelImagePayloads = this.constructFilePayloads(req, imageFiles);
-      const hotelImages = await HotelImageService.create(hotelImagePayloads);
-      await HotelService.update(hotel.id, { images: hotelImages.map((image) => image._id) });
+      const hotelImages = await HotelImagesService.create(hotelImagePayloads);
+      await HotelsService.update(hotel.id, { images: hotelImages.map((image) => image._id) });
     }
     // Get created hotel
-    const createdHotel = await HotelService.getById(hotel._id);
+    const createdHotel = await HotelsService.getById(hotel._id);
     // Return response
     return res.status(201).json({
       status: HttpStatusEnum.Created,
@@ -56,7 +56,7 @@ class HotelController {
     const { id } = req.params;
     const payload = { ...req.body };
     // Check existing hotel
-    const hotel = await HotelService.getById(id);
+    const hotel = await HotelsService.getById(id);
     if (!hotel) {
       throw errorsUtil.createNotFound(`Can't find hotel with id ${id}`);
     }
@@ -67,7 +67,7 @@ class HotelController {
         name: new RegExp(payload.name, 'i'),
         address: new RegExp(payload.address, 'i'),
       };
-      const existingHotels = await HotelService.getAll(filterQuery);
+      const existingHotels = await HotelsService.getAll(filterQuery);
       if (existingHotels.length) {
         throw errorsUtil.createBadRequest(`Hotel with the same name and address already exists`);
       }
@@ -77,7 +77,7 @@ class HotelController {
       const clonedRemovedImages = [...payload.removedImages];
       delete payload.removedImages;
       if (clonedRemovedImages.length) {
-        await HotelImageService.remove(clonedRemovedImages);
+        await HotelImagesService.remove(clonedRemovedImages);
         payload.images = hotel.images.filter(
           (imageId) => !clonedRemovedImages.includes(String(imageId)),
         );
@@ -85,13 +85,13 @@ class HotelController {
     }
     if (imageFiles.length) {
       const hotelImagePayloads = this.constructFilePayloads(req, imageFiles);
-      const hotelImages = await HotelImageService.create(hotelImagePayloads);
+      const hotelImages = await HotelImagesService.create(hotelImagePayloads);
       payload.images = [...hotel.images, ...hotelImages.map((image) => image._id)];
     }
     // Start updating
-    await HotelService.update(id, payload);
+    await HotelsService.update(id, payload);
     // Return response
-    const updatedHotel = await HotelService.getById(id);
+    const updatedHotel = await HotelsService.getById(id);
     return res.status(200).json({
       status: HttpStatusEnum.Updated,
       statusCode: HttpStatusCodeEnum.Ok,
@@ -100,8 +100,8 @@ class HotelController {
   });
 
   removeHotel = catchAsync(async (req, res) => {
-    const { images } = await HotelService.getImagesById(req.params.id);
-    await Promise.all([HotelImageService.remove(images), HotelService.remove(req.params.id)]);
+    const { images } = await HotelsService.getImagesById(req.params.id);
+    await Promise.all([HotelImagesService.remove(images), HotelsService.remove(req.params.id)]);
     return res.status(204).json();
   });
 }

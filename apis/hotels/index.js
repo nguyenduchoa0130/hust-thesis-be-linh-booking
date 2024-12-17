@@ -1,4 +1,5 @@
-const { UploadFileMiddleware } = require('../../middlewares');
+const { UploadFileMiddleware, ValidationPayloadMiddleware } = require('../../middlewares');
+const { hotelIdSchema } = require('./hotels.validations');
 const router = require('express').Router();
 const ctrl = require('./hotels.controller');
 
@@ -6,6 +7,7 @@ const MAXIMUM_FILE = 5;
 
 router
   .route('/:id')
+  .all(ValidationPayloadMiddleware('params', hotelIdSchema))
   .patch(
     UploadFileMiddleware.fields([{ name: 'images', maxCount: MAXIMUM_FILE }]),
     ctrl.updateHotel,
