@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, required: true, unique: true },
     gender: { type: String },
     address: { type: String },
-    avatar: { type: String },
+    avatarUrl: { type: String },
+    avatarPath: { type: String },
     role: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'roles',
