@@ -10,6 +10,11 @@
     "desc": "Responsible for managing bookings and customer interactions"
   },
   {
+    "name": "coordinator",
+    "displayName": "coordinator",
+    "desc": "Responsible for coordinate tour"
+  },
+  {
     "name": "tour_guide",
     "displayName": "Tour Guide",
     "desc": "Provides guided tours and helps customers with their needs"
