@@ -27,9 +27,10 @@ app.use('/api/auth', require('./apis/auth'));
 app.use('/api/roles', require('./apis/roles'));
 app.use('/api/tours', require('./apis/tours'));
 app.use('/api/hotels', require('./apis/hotels'));
+app.use('/api/tour-details', require('./apis/tour-details'));
 app.use('/api/tour-categories', require('./apis/tour-categories'));
-app.use('/api/tour-destinations', require('./apis/tour-destinations'));
 app.use('/api/tour-transports', require('./apis/tour-transports'));
+app.use('/api/tour-destinations', require('./apis/tour-destinations'));
 app.use('*', (req, res) => {
   return res.status(HttpStatusCodeEnum.NotFound).json({
     status: 'Not found',

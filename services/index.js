@@ -3,8 +3,10 @@ module.exports = {
   UsersService: require('./users'),
   RolesService: require('./roles'),
   HotelsService: require('./hotels'),
+  TourDetailsService: require('./tour-details'),
   HotelImagesService: require('./hotel-images'),
+  TourTransportsService: require('./tour-transports'),
   TourCategoriesService: require('./tour-categories'),
   TourDestinationsService: require('./tour-destinations'),
-  TourTransportsService: require('./tour-transports'),
+  TourDetailImagesService: require('./tour-detail-images'),
 };

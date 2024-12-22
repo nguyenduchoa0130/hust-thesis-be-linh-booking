@@ -1,14 +1,14 @@
 const router = require('express').Router();
 const { UploadFileMiddleware, ValidationPayloadMiddleware } = require('../../middlewares');
 const ctrl = require('./controller');
-const { tourSchema } = require('./validations');
+const { tourDetailSchema } = require('./validations');
 
 router
   .route('/')
   .post(
-    UploadFileMiddleware.fields([{ name: 'thumbnail', maxCount: 1 }]),
-    ValidationPayloadMiddleware('body', tourSchema),
-    ctrl.createTour,
+    UploadFileMiddleware.fields([{ name: 'images', maxCount: 5 }]),
+    ValidationPayloadMiddleware('bod', tourDetailSchema),
+    ctrl.createTourDetail,
   );
 
 module.exports = router;

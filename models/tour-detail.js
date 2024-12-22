@@ -4,9 +4,9 @@ const tourDetailSchema = new mongoose.Schema(
   {
     title: { type: String },
     desc: { type: String },
-    ggMap: { type: String },
-    destination: { type: String },
+    hotel: { type: mongoose.Schema.Types.ObjectId, ref: 'hotels' },
     images: [{ type: mongoose.Schema.Types.ObjectId, ref: 'tourDetailImages' }],
+    destination: { type: mongoose.Schema.Types.ObjectId, ref: 'tourDestinations' },
   },
   { timestamps: true },
 );

@@ -8,6 +8,7 @@ const MAXIMUM_FILE = 5;
 router
   .route('/:id')
   .all(ValidationPayloadMiddleware('params', hotelIdSchema))
+  .get(ctrl.getHotelById)
   .patch(
     UploadFileMiddleware.fields([{ name: 'images', maxCount: MAXIMUM_FILE }]),
     ctrl.updateHotel,
