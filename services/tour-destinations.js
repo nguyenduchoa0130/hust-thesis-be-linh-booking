@@ -2,7 +2,7 @@ const { TourDestinationsModel } = require('../models');
 
 module.exports = {
   getAll: () => {
-    return TourDestinationsModel.find();
+    return TourDestinationsModel.find().sort({ createdAt: 'desc' });
   },
   getOne: (filterQuery) => {
     return TourDestinationsModel.findOne(filterQuery);

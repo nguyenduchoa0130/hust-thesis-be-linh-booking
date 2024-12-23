@@ -5,6 +5,7 @@ const { tourSchema } = require('./validations');
 
 router
   .route('/')
+  .get(ctrl.getTours)
   .post(
     UploadFileMiddleware.fields([{ name: 'thumbnail', maxCount: 1 }]),
     ValidationPayloadMiddleware('body', tourSchema),

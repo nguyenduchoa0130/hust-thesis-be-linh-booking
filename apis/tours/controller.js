@@ -2,16 +2,15 @@ const { TourStatusEnum, HttpStatusCodeEnum, HttpStatusEnum } = require('../../en
 const { ToursService } = require('../../services');
 const { catchAsync, fileUtil } = require('../../utils');
 
-const constructFilePayloads = (req, files) => {
-  return files.map((file) => ({
-    path: file.path,
-    name: file.filename,
-    url: fileUtil.constructUrl(req, file.filename),
-  }));
-};
-
 module.exports = {
-  getTours: catchAsync(async (req, res) => {}),
+  getTours: catchAsync(async (req, res) => {
+    const tours = await ToursService.getAll(req.body.query);
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: tours,
+    });
+  }),
   createTour: catchAsync(async (req, res) => {
     const filterQuery = {
       name: new RegExp(req.body.name, 'i'),

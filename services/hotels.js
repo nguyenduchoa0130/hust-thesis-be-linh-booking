@@ -4,7 +4,8 @@ module.exports = {
   getAll: (filterQuery) => {
     return HotelsModel.find(filterQuery)
       .select({ __v: 0, createdAt: 0, updatedAt: 0 })
-      .populate({ path: 'images', select: { __v: 0, path: 0, createdAt: 0, updatedAt: 0 } });
+      .populate({ path: 'images', select: { __v: 0, path: 0, createdAt: 0, updatedAt: 0 } })
+      .sort({ createdAt: 'desc' });
   },
   getById: (id) => {
     return HotelsModel.findById(id)
