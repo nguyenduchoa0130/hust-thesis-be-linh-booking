@@ -6,7 +6,7 @@ module.exports = {
       .select({ __v: 0, createdAt: 0, updatedAt: 0, password: 0 })
       .populate({
         path: 'role',
-        select: { __v: 0, path: 0, createdAt: 0, updatedAt: 0, displayName: 0, desc: 0 },
+        select: { __v: 0, path: 0, createdAt: 0, updatedAt: 0, desc: 0 },
       });
   },
   getOne: (filterQuery) => {
@@ -19,7 +19,7 @@ module.exports = {
       .select({ __v: 0, createdAt: 0, updatedAt: 0, password: 0 })
       .populate({
         path: 'role',
-        select: { __v: 0, path: 0, createdAt: 0, updatedAt: 0, displayName: 0, desc: 0 },
+        select: { __v: 0, path: 0, createdAt: 0, updatedAt: 0, desc: 0 },
       });
   },
   create: (payload) => {

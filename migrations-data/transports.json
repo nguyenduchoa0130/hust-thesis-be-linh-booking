@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Car",
+    "desc": "",
+    "iconName": "car"
+  },
+  {
+    "name": "Bus",
+    "desc": "",
+    "iconName": "bus"
+  },
+  {
+    "name": "Plane",
+    "desc": "",
+    "iconName": "plane"
+  },
+  {
+    "name": "Ship",
+    "desc": "",
+    "iconName": "ship"
+  },
+  {
+    "name": "Kayak",
+    "desc": "",
+    "iconName": "kayak"
+  },
+  {
+    "name": "Subway",
+    "desc": "",
+    "iconName": "metro"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Family with 5 members",
+    "desc": "Tours designed for families with activities and accommodations suitable for all ages.",
+    "maxParticipants": 5
+  },
+  {
+    "name": "Hiking",
+    "desc": "Tours that involve walking in natural environments, often on trails or paths.",
+    "maxParticipants": 5
+  },
+  {
+    "name": "Trekking",
+    "desc": "Tours that involve long, vigorous hikes, typically in mountainous or remote areas.",
+    "maxParticipants": 5
+  },
+  {
+    "name": "Joint Tour",
+    "desc": "Tours where multiple groups or individuals join together for a shared experience.",
+    "maxParticipants": 1
+  },
+  {
+    "name": "Custom",
+    "desc": "Tours that can be customized based on user requests and preferences."
+  }
+]
