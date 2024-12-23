@@ -7,6 +7,7 @@ module.exports = {
   TokensModel: require('./token'),
   HotelImagesModel: require('./hotel-image'),
   TourDetailsModel: require('./tour-detail'),
+  TourSchedulesModel: require('./tour-schedule'),
   TourCategoriesModel: require('./tour-category'),
   TourTransportsModel: require('./tour-transport'),
   TourParticipantsModel: require('./tour-participant'),
