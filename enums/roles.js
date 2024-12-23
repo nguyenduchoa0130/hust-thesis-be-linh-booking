@@ -1,3 +1,7 @@
 module.exports = {
-  administrator: 1,
+  Administrator: 'administrator',
+  Sale: 'sale',
+  Coordinator: 'coordinator',
+  TourGuide: 'tour_guide',
+  Customer: 'customer',
 };

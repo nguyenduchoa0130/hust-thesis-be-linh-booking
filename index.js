@@ -26,6 +26,7 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.use('/api/auth', require('./apis/auth'));
 app.use('/api/roles', require('./apis/roles'));
 app.use('/api/tours', require('./apis/tours'));
+app.use('/api/staff', require('./apis/staff'));
 app.use('/api/hotels', require('./apis/hotels'));
 app.use('/api/tour-details', require('./apis/tour-details'));
 app.use('/api/tour-categories', require('./apis/tour-categories'));

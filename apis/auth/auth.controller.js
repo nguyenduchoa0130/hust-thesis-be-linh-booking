@@ -1,9 +1,9 @@
-const { HttpStatusEnum, HttpStatusCodeEnum } = require('../../enums');
-const { UsersService } = require('../../services');
+const { HttpStatusEnum, HttpStatusCodeEnum, RolesEnum } = require('../../enums');
+const { UsersService, TokensService, RolesService } = require('../../services');
 const { catchAsync, jwtUtil, errorsUtil, passwordUtil } = require('../../utils');
 
 module.exports = {
-  login: catchAsync(async (req, res) => {
+  signIn: catchAsync(async (req, res) => {
     const user = await UsersService.getOne({ email: req.body.email });
     if (!user) {
       throw errorsUtil.createNotFound(`The email or password is incorrect`);
@@ -12,13 +12,25 @@ module.exports = {
     if (!isMatch) {
       throw errorsUtil.createNotFound(`The email or password is incorrect`);
     }
-    return res.status(200).json({
+    const jwtPayload = {
+      userId: user._id,
+      email: user.email,
+      role: user.role,
+    };
+    const [accessToken, refreshToken] = await Promise.all([
+      jwtUtil.createAccessToken(jwtPayload),
+      jwtUtil.createRefreshToken(jwtPayload),
+    ]);
+    await TokensService.remove(user.email);
+    await TokensService.create({ refreshToken, email: user.email });
+    return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
       data: user,
+      accessToken,
     });
   }),
-  register: catchAsync(async (req, res) => {
+  signUp: catchAsync(async (req, res) => {
     const [existingEmail, existingPhone] = await Promise.all([
       UsersService.getOne({ email: new RegExp(req.body.email, 'i') }),
       UsersService.getOne({ phone: req.body.phone }),
@@ -29,13 +41,31 @@ module.exports = {
     if (existingPhone) {
       throw errorsUtil.createBadRequest('Phone was already used');
     }
-    const hashedPassword = await passwordUtil.hash(req.body.password);
-    const newUser = await UsersService.create({ ...req.body, password: hashedPassword });
+    const [hashedPassword, customerRole] = await Promise.all([
+      passwordUtil.hash(req.body.password),
+      RolesService.getOne({ name: RolesEnum.Customer }),
+    ]);
+    const newUser = await UsersService.create({
+      ...req.body,
+      role: customerRole._id,
+      password: hashedPassword,
+    });
     const userFullIn4 = await UsersService.getById(newUser.id);
-    return res.status(201).json({
+    const jwtPayload = {
+      userId: userFullIn4._id,
+      email: userFullIn4.email,
+      role: userFullIn4.role._id,
+    };
+    const [accessToken, refreshToken] = await Promise.all([
+      jwtUtil.createAccessToken(jwtPayload),
+      jwtUtil.createRefreshToken(jwtPayload),
+    ]);
+    await TokensService.create({ refreshToken, email: userFullIn4.email });
+    return res.status(HttpStatusCodeEnum.Created).json({
       status: HttpStatusEnum.Created,
       statusCode: HttpStatusCodeEnum.Created,
       data: userFullIn4,
+      accessToken,
     });
   }),
 };

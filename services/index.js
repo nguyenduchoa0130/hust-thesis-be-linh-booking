@@ -2,6 +2,7 @@ module.exports = {
   ToursService: require('./tours'),
   UsersService: require('./users'),
   RolesService: require('./roles'),
+  TokensService: require('./token'),
   HotelsService: require('./hotels'),
   TourDetailsService: require('./tour-details'),
   HotelImagesService: require('./hotel-images'),

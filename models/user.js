@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     address: { type: String },
     avatarUrl: { type: String },
     avatarPath: { type: String },
+    dateOfBirth: { type: Date },
     role: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'roles',

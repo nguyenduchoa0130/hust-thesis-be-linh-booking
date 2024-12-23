@@ -5,13 +5,13 @@
     "desc": "Responsible for managing whole system"
   },
   {
-    "name": "sales",
+    "name": "sale",
     "displayName": "Sale",
     "desc": "Responsible for managing bookings and customer interactions"
   },
   {
     "name": "coordinator",
-    "displayName": "coordinator",
+    "displayName": "Coordinator",
     "desc": "Responsible for coordinate tour"
   },
   {

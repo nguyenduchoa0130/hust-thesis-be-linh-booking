@@ -8,4 +8,6 @@ module.exports = {
   NumberMin: 'number.min',
   DateFormat: 'date.format',
   NumberInteger: 'number.base',
+  Valid: 'string.valid',
+  Date: 'base.date',
 };
