@@ -44,4 +44,11 @@ module.exports = {
         [ValidationTypeEnum.Required]: 'Each detail must be a string',
       }),
   }),
+  tourIdSchema: Joi.object({
+    id: Joi.string()
+      .required()
+      .messages({
+        [ValidationTypeEnum.Required]: 'ID is required',
+      }),
+  }),
 };

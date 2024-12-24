@@ -1,6 +1,6 @@
 const { TourStatusEnum, HttpStatusCodeEnum, HttpStatusEnum } = require('../../enums');
 const { ToursService } = require('../../services');
-const { catchAsync, fileUtil } = require('../../utils');
+const { catchAsync, fileUtil, errorsUtil } = require('../../utils');
 
 module.exports = {
   getTours: catchAsync(async (req, res) => {
@@ -9,6 +9,29 @@ module.exports = {
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
       data: tours,
+    });
+  }),
+  getTourById: catchAsync(async (req, res) => {
+    const tour = await ToursService.getOne({ _id: req.params.id });
+    if (!tour) {
+      throw errorsUtil.createNotFound(`Tour not found`);
+    }
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: tour,
+    });
+  }),
+  getRelevantTours: catchAsync(async (req, res) => {
+    const tour = await ToursService.getOne({ _id: req.params.id });
+    if (!tour) {
+      throw errorsUtil.createNotFound(`Tour not found`);
+    }
+    const relevantTours = await ToursService.getRelevantTours(req.params.id, tour?.category?._id);
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: relevantTours,
     });
   }),
   createTour: catchAsync(async (req, res) => {

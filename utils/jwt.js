@@ -16,9 +16,9 @@ module.exports = {
     return token;
   },
 
-  verifyToken: (payload) => {
+  verifyToken: (token) => {
     try {
-      return jwt.verify(payload, process.env.JWT_SECRET || 'token_secret');
+      return jwt.verify(token, process.env.JWT_SECRET || 'token_secret');
     } catch (err) {
       switch (err.code) {
         case 'TokenExpiredError':

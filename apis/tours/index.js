@@ -1,7 +1,12 @@
 const router = require('express').Router();
-const { UploadFileMiddleware, ValidationPayloadMiddleware } = require('../../middlewares');
 const ctrl = require('./controller');
-const { tourSchema } = require('./validations');
+const { tourSchema, tourIdSchema } = require('./validations');
+const { UploadFileMiddleware, ValidationPayloadMiddleware } = require('../../middlewares');
+
+router.route('/:id').get(ValidationPayloadMiddleware('params', tourIdSchema), ctrl.getTourById);
+router
+  .route('/relevant-tours/:id')
+  .get(ValidationPayloadMiddleware('params', tourIdSchema), ctrl.getRelevantTours);
 
 router
   .route('/')

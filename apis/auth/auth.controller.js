@@ -12,6 +12,7 @@ module.exports = {
     if (!isMatch) {
       throw errorsUtil.createNotFound(`The email or password is incorrect`);
     }
+    delete user.password;
     const jwtPayload = {
       userId: user._id,
       email: user.email,
@@ -54,7 +55,7 @@ module.exports = {
     const jwtPayload = {
       userId: userFullIn4._id,
       email: userFullIn4.email,
-      role: userFullIn4.role._id,
+      role: userFullIn4.role,
     };
     const [accessToken, refreshToken] = await Promise.all([
       jwtUtil.createAccessToken(jwtPayload),
