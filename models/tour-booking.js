@@ -1,17 +1,25 @@
 const mongoose = require('mongoose');
+const { TourBookingStatusEnum } = require('../enums');
 
 const tourBookingSchema = new mongoose.Schema(
   {
-    tourId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tours', required: true },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Users', required: true },
-    bookingDate: { type: Date, required: true },
-    totalPrice: { type: Number, required: true },
-    status: { type: String, required: true, enum: ['Pending', 'Confirmed', 'Cancelled'] },
-    paymentMethod: { type: String, required: true },
-    paymentStatus: { type: String, required: true, enum: ['Pending', 'Completed', 'Failed'] },
-    paymentDetails: { type: Object },
-    note: { type: String },
-    guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'tourTransports' }],
+    amount: { type: Number, required: true },
+    status: {
+      type: String,
+      enum: [
+        TourBookingStatusEnum.Pending,
+        TourBookingStatusEnum.Confirmed,
+        TourBookingStatusEnum.Cancelled,
+      ],
+      default: TourBookingStatusEnum.Pending,
+    },
+    notes: { type: String },
+    reason: { type: String },
+    payment: { type: mongoose.Schema.Types.ObjectId, ref: 'payments' },
+    tourGuide: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    coordinator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    customer: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
+    tourSchedule: { type: mongoose.Schema.Types.ObjectId, ref: 'tourSchedules', required: true },
   },
   { timestamps: true },
 );
