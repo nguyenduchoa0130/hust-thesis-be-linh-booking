@@ -12,10 +12,18 @@ const {
   HttpStatusEnum,
   PaymentStatusEnum,
   MoMoStatusCodeEnum,
-  TourBookingStatusEnum,
 } = require('../../enums');
 
 module.exports = {
+  getPayments: catchAsync(async (req, res) => {
+    const filterQuery = req.query;
+    const payments = await PaymentsService.getAll(filterQuery);
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: payments,
+    });
+  }),
   createPaymentWithMoMoWallet: catchAsync(async (req, res) => {
     const { tourBookingInfo, paymentInfo } = req.body;
     const paymentMethod = await PaymentMethodsService.getOne({ _id: paymentInfo.paymentMethod });
@@ -27,7 +35,7 @@ module.exports = {
     try {
       logger.info('--------------------PAYMENT REQUEST BODY----------------');
       const MO_MO_CALLBACK = '/apis/payments/mo-mo-payment-callback';
-      const callbackUrl = `${req.protocol}://${req.get('host')}${MO_MO_CALLBACK}`;
+      const callbackUrl = `${req.protocol}s://${req.get('host')}${MO_MO_CALLBACK}`;
       const requestBody = createMoMoRequestBody(paymentMethod, paymentInfo, callbackUrl);
       logger.info(JSON.stringify(requestBody));
 
@@ -89,7 +97,10 @@ module.exports = {
     }
     // Update payment and tour booking
     if (req.body.resultCode === MoMoStatusCodeEnum.Success) {
-      await PaymentsService.update({ _id: payment._id }, { status: PaymentStatusEnum.Paid });
+      await PaymentsService.update(
+        { _id: payment._id },
+        { status: PaymentStatusEnum.Paid, createdAt: new Date() },
+      );
       return res.status(HttpStatusCodeEnum.Ok).send({
         status: HttpStatusEnum.Updated,
         statusCode: HttpStatusCodeEnum.Ok,
