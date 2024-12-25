@@ -28,10 +28,12 @@ app.use('/api/roles', require('./apis/roles'));
 app.use('/api/tours', require('./apis/tours'));
 app.use('/api/staff', require('./apis/staff'));
 app.use('/api/hotels', require('./apis/hotels'));
+app.use('/api/payments', require('./apis/payments'));
 app.use('/api/tour-details', require('./apis/tour-details'));
 app.use('/api/tour-schedules', require('./apis/tour-schedules'));
 app.use('/api/tour-categories', require('./apis/tour-categories'));
 app.use('/api/tour-transports', require('./apis/tour-transports'));
+app.use('/api/payment-methods', require('./apis/payment-methods'));
 app.use('/api/tour-destinations', require('./apis/tour-destinations'));
 app.use('*', (req, res) => {
   return res.status(HttpStatusCodeEnum.NotFound).json({
