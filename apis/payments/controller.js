@@ -83,7 +83,7 @@ module.exports = {
         data,
       });
     } catch (error) {
-      const err = new Error(error?.data.message);
+      const err = new Error(error?.data?.message || error.message);
       err.statusCode = error.status;
       logger.error(error);
       throw err;
