@@ -11,6 +11,17 @@ module.exports = {
       data: tourSchedules,
     });
   }),
+  getScheduleById: catchAsync(async (req, res) => {
+    const tourSchedule = await TourSchedulesService.getOne({ _id: req.params.id });
+    if (!tourSchedule) {
+      throw errorsUtil.createNotFound('Tour schedule not found');
+    }
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: tourSchedule,
+    });
+  }),
   getTourSchedules: catchAsync(async (req, res) => {
     const tourSchedules = await TourSchedulesService.getAll({ tour: req.params.id });
     return res.status(HttpStatusCodeEnum.Ok).json({

@@ -20,7 +20,6 @@ module.exports = {
       throw errorsUtil.createBadRequest('Transport already exists');
     }
     const data = await TourTransportsService.create(req.body);
-    console.log(data);
     return res.status(HttpStatusCodeEnum.Created).json({
       status: HttpStatusEnum.Created,
       statusCode: HttpStatusCodeEnum.Created,

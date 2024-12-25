@@ -5,7 +5,13 @@ const { tourIdSchema } = require('./validations');
 
 router
   .route('/tour/:id')
-  .get(ValidationPayloadMiddleware('params', tourIdSchema), ctrl.getTourSchedules);
+  .all(ValidationPayloadMiddleware('params', tourIdSchema))
+  .get(ctrl.getTourSchedules);
+
+router
+  .route('/:id')
+  .all(ValidationPayloadMiddleware('params', tourIdSchema))
+  .get(ctrl.getScheduleById);
 
 router.route('/').get(ctrl.getSchedules).post(ctrl.createSchedule);
 
