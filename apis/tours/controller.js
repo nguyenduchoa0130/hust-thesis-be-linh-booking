@@ -50,7 +50,6 @@ module.exports = {
       thumbnailUrl: fileUtil.constructUrl(req, thumbnailFile.filename),
     };
     const newTour = await ToursService.create(tourPayload);
-    console.log(newTour);
     return res.status(HttpStatusCodeEnum.Created).json({
       status: HttpStatusEnum.Created,
       statusCode: HttpStatusCodeEnum.Created,

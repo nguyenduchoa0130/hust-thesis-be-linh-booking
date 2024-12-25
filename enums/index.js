@@ -5,4 +5,8 @@ module.exports = {
   ValidationTypeEnum: require('./validation-type'),
   HttpStatusCodeEnum: require('./http-status-code'),
   TourScheduleStatusEnum: require('./tour-schedule-status'),
+  PaymentMethodStatusEnum: require('./payment-method-status'),
+  TourBookingStatusEnum: require('./tour-booking-status'),
+  PaymentStatusEnum: require('./payment-status'),
+  MoMoStatusCodeEnum: require('./mo-mo-status-code'),
 };

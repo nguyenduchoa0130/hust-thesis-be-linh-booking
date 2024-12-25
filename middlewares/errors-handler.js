@@ -10,7 +10,7 @@ const ErrorHandlerMiddleware = (err, req, res, next) => {
   let tracing = undefined;
 
   if (statusCode === HttpStatusCodeEnum.InternalServerError) {
-    logger.error('A critical error occurred:', JSON.stringify(err));
+    logger.error('A critical error occurred:', err);
   }
   if (
     process.env.NODE_ENV !== 'production' &&
