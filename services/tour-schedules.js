@@ -28,8 +28,7 @@ module.exports = {
             select: { __v: 0, createdAt: 0, updatedAt: 0 },
           },
         ],
-      })
-      .sort({ createdAt: 'desc' });
+      });
   },
   create: (payload) => {
     return TourSchedulesModel.create(payload);
