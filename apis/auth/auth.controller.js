@@ -12,7 +12,6 @@ module.exports = {
     if (!isMatch) {
       throw errorsUtil.createNotFound(`The email or password is incorrect`);
     }
-    delete user.password;
     const jwtPayload = {
       userId: user._id,
       email: user.email,
@@ -24,10 +23,12 @@ module.exports = {
     ]);
     await TokensService.remove(user.email);
     await TokensService.create({ refreshToken, email: user.email });
+    let userWithoutPassword = user.toObject();
+    delete userWithoutPassword.password;
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
-      data: user,
+      data: userWithoutPassword,
       accessToken,
     });
   }),

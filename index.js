@@ -30,6 +30,7 @@ app.use('/api/staff', require('./apis/staff'));
 app.use('/api/hotels', require('./apis/hotels'));
 app.use('/api/payments', require('./apis/payments'));
 app.use('/api/tour-details', require('./apis/tour-details'));
+app.use('/api/tour-bookings', require('./apis/tour-bookings'));
 app.use('/api/tour-schedules', require('./apis/tour-schedules'));
 app.use('/api/tour-categories', require('./apis/tour-categories'));
 app.use('/api/tour-transports', require('./apis/tour-transports'));

@@ -26,7 +26,9 @@ module.exports = {
     }
     try {
       logger.info('--------------------PAYMENT REQUEST BODY----------------');
-      const requestBody = createMoMoRequestBody(paymentMethod, paymentInfo);
+      const MO_MO_CALLBACK = '/apis/payments/mo-mo-payment-callback';
+      const callbackUrl = `${req.protocol}://${req.get('host')}${MO_MO_CALLBACK}`;
+      const requestBody = createMoMoRequestBody(paymentMethod, paymentInfo, callbackUrl);
       logger.info(JSON.stringify(requestBody));
 
       logger.info('-------------------- PAYMENT CONFIGS ----------------');
@@ -87,17 +89,11 @@ module.exports = {
     }
     // Update payment and tour booking
     if (req.body.resultCode === MoMoStatusCodeEnum.Success) {
-      await Promise.all([
-        PaymentsService.update({ _id: payment._id }, { status: PaymentStatusEnum.Paid }),
-        TourBookingsService.update(
-          { payment: payment._id },
-          { status: TourBookingStatusEnum.Confirmed },
-        ),
-      ]);
+      await PaymentsService.update({ _id: payment._id }, { status: PaymentStatusEnum.Paid });
       return res.status(HttpStatusCodeEnum.Ok).send({
         status: HttpStatusEnum.Updated,
         statusCode: HttpStatusCodeEnum.Ok,
-        message: 'Your payment and tour booking have been updated',
+        message: 'Your payment have been updated',
       });
     } else {
       logger.error(`Error in completed payment: ${JSON.stringify(req.body)}`);

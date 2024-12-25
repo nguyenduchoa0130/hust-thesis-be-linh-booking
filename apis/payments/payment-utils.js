@@ -2,12 +2,12 @@ const crypto = require('crypto');
 const { logger } = require('../../utils');
 
 module.exports = {
-  createMoMoRequestBody: (paymentMethod, paymentInfo) => {
+  createMoMoRequestBody: (paymentMethod, paymentInfo, callbackUrl) => {
     const accessKey = paymentMethod.accessKey;
     const secretKey = paymentMethod.secretKey;
     const orderInfo = `Book Tour: ${paymentInfo.tourName}`;
     const partnerCode = paymentMethod.partnerCode;
-    const redirectUrl = paymentInfo.redirectUrl;
+    const redirectUrl = callbackUrl;
     const ipnUrl = paymentInfo.ipnUrl;
     const requestType = 'payWithMethod';
     const amount = paymentInfo.price;
