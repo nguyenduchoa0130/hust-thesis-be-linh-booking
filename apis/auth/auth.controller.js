@@ -70,4 +70,25 @@ module.exports = {
       accessToken,
     });
   }),
+  refreshToken: catchAsync(async (req, res) => {
+    const token = await TokensService.getOne(req.body.email);
+    if (!token) {
+      throw errorsUtil.createNotFound('Your Token was expired.');
+    }
+    try {
+      const decoded = jwtUtil.verifyToken(token.refreshToken);
+      const newAccessToken = await jwtUtil.createAccessToken({
+        userId: decoded._id,
+        email: decoded.email,
+        role: decoded.role,
+      });
+      return res.status(HttpStatusCodeEnum.Ok).json({
+        status: HttpStatusEnum.Success,
+        statusCode: HttpStatusCodeEnum.Ok,
+        accessToken: newAccessToken,
+      });
+    } catch (error) {
+      throw errorsUtil.createNotFound('Your Token was expired.');
+    }
+  }),
 };

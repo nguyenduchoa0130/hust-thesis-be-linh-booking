@@ -8,7 +8,9 @@ const ErrorHandlerMiddleware = (err, req, res, next) => {
   const statusCode = Number(err.statusCode) || HttpStatusCodeEnum.InternalServerError;
   const message = err.message || 'Internal server error. An error occurred in request progress';
   logger.error('A critical error occurred:', err);
-  logger.error(err.stack);
+  if (statusCode === HttpStatusCodeEnum.InternalServerError) {
+    logger.error(err.stack);
+  }
   return res.status(statusCode).json({ status, statusCode, message });
 };
 

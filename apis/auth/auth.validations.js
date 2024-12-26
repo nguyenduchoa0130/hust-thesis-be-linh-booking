@@ -63,4 +63,14 @@ module.exports = {
         [ValidationTypeEnum.Required]: 'Password is required',
       }),
   }),
+  refreshTokenSchema: joi.object({
+    email: joi
+      .string()
+      .required()
+      .email()
+      .messages({
+        [ValidationTypeEnum.Required]: 'Email is required',
+        [ValidationTypeEnum.Email]: 'Invalid email',
+      }),
+  }),
 };

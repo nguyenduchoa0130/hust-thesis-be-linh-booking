@@ -1,6 +1,9 @@
 const { TokensModel } = require('../models');
 
 module.exports = {
+  getOne: (email) => {
+    return TokensModel.findOne({ email });
+  },
   create: (payload) => {
     return TokensModel.create(payload);
   },

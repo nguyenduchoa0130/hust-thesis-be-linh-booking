@@ -12,7 +12,7 @@ const AuthGuard = (roles, checkOwner) => {
       const decoded = await jwtUtil.verifyToken(token);
       req.currentUser = decoded;
       const hasPermission = roles && roles.includes(req.currentUser?.role.name);
-      const isOwner = checkOwner && req.currentUser?.id === req.params.id;
+      const isOwner = checkOwner && req.currentUser?.userId === req.params.id;
       if (!hasPermission && !isOwner) {
         return next(
           errorsUtil.createForbidden(
