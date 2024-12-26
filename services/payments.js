@@ -16,8 +16,6 @@ module.exports = {
     return PaymentsModel.create(payload);
   },
   update: (filterQuery, changes) => {
-    console.log(filterQuery);
-    console.log(changes);
     return PaymentsModel.updateOne(filterQuery, changes);
   },
 };

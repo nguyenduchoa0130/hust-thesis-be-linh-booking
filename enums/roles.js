@@ -1,6 +1,6 @@
 module.exports = {
   Administrator: 'administrator',
-  Sale: 'sale',
+  Sale: 'sales',
   Coordinator: 'coordinator',
   TourGuide: 'tour_guide',
   Customer: 'customer',

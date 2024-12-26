@@ -20,7 +20,7 @@ module.exports = {
     try {
       return jwt.verify(token, process.env.JWT_SECRET || 'token_secret');
     } catch (err) {
-      switch (err.code) {
+      switch (err.name) {
         case 'TokenExpiredError':
           throw errorsUtil.createUnauthorized('Your token has expired');
         case 'JsonWebTokenError':

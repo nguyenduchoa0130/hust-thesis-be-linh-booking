@@ -11,4 +11,13 @@ module.exports = {
       data: tourBookings,
     });
   }),
+
+  getTourBookingByUserId: catchAsync(async (req, res) => {
+    const tourBooking = await TourBookingsService.getTourBookingsByUserId(req.params.userId);
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: tourBooking,
+    });
+  }),
 };

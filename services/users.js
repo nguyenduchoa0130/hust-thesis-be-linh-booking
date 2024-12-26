@@ -25,4 +25,10 @@ module.exports = {
   create: (payload) => {
     return UsersModel.create(payload);
   },
+  update: (filterQuery, changes) => {
+    return UsersModel.updateOne(filterQuery, changes);
+  },
+  remove: (filterQuery) => {
+    return UsersModel.deleteOne(filterQuery);
+  },
 };

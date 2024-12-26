@@ -27,6 +27,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "joi": "^17.13.3",
+    "joi-objectid": "^4.0.2",
+    "joi-oid": "^1.1.2",
     "jsonwebtoken": "^9.0.2",
     "migrate-mongo": "^11.0.0",
     "mongoose": "^8.8.4",

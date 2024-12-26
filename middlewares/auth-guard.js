@@ -1,7 +1,6 @@
 const { errorsUtil, jwtUtil } = require('../utils');
 
-// Ensure you have your secret key in the config
-const AuthGuard = (roles) => {
+const AuthGuard = (roles, checkOwner) => {
   return async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -12,8 +11,14 @@ const AuthGuard = (roles) => {
     try {
       const decoded = await jwtUtil.verifyToken(token);
       req.currentUser = decoded;
-      if (roles && !roles.includes(req.currentUser?.role.name)) {
-        return next(errorsUtil.createForbidden('Access denied. You do not have the required role'));
+      const hasPermission = roles && roles.includes(req.currentUser?.role.name);
+      const isOwner = checkOwner && req.currentUser?.id === req.params.id;
+      if (!hasPermission && !isOwner) {
+        return next(
+          errorsUtil.createForbidden(
+            'Access denied. You are not authorized to perform this action',
+          ),
+        );
       }
       return next();
     } catch (error) {
