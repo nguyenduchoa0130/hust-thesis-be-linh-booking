@@ -1,13 +1,14 @@
 const joi = require('joi');
+joi.objectId = require('joi-objectid')(joi);
 const { ValidationTypeEnum } = require('../../enums');
 
 module.exports = {
   hotelIdSchema: joi.object({
     id: joi
-      .string()
-      .regex(/^[0-9a-fA-F]{24}$/)
+      .objectId()
+      .required()
       .messages({
-        [ValidationTypeEnum.StringPattern]: 'Invalid hotel id',
+        [ValidationTypeEnum.Required]: 'Hotel ID is required',
       }),
   }),
 };

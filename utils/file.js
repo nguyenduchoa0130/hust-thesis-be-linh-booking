@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { logger } = require('.');
 const fsUnlink = require('util').promisify(fs.unlink);
 
 module.exports = {
@@ -10,6 +11,10 @@ module.exports = {
     return `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
   },
   removeFile: async (filePath) => {
-    return await fsUnlink(filePath);
+    try {
+      return await fsUnlink(filePath);
+    } catch (error) {
+      logger.error(error);
+    }
   },
 };

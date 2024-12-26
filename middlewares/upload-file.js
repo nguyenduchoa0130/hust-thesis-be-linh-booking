@@ -7,6 +7,7 @@ const {
   images: allowedImageMimeTypes,
   videos: allowedVideoMimeTypes,
 } = require('../configs/allowed-mime-types.json');
+const crypto = require('crypto');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -16,7 +17,8 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
+    const randomName = crypto.randomBytes(8).toString('hex');
+    cb(null, randomName + ext);
   },
 });
 
