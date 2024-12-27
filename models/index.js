@@ -15,5 +15,6 @@ module.exports = {
   TourTransportsModel: require('./tour-transport'),
   TourParticipantsModel: require('./tour-participant'),
   TourDestinationsModel: require('./tour-destination'),
+  TourRequirementsModel: require('./tour-requirement'),
   TourDetailImagesModel: require('./tour-detail-image'),
 };

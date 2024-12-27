@@ -36,6 +36,7 @@ app.use('/api/tour-categories', require('./apis/tour-categories'));
 app.use('/api/tour-transports', require('./apis/tour-transports'));
 app.use('/api/payment-methods', require('./apis/payment-methods'));
 app.use('/api/tour-destinations', require('./apis/tour-destinations'));
+app.use('/api/tour-requirements', require('./apis/tour-requirements'));
 app.use('*', (req, res) => {
   return res.status(HttpStatusCodeEnum.NotFound).json({
     status: 'Not found',
