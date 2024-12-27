@@ -3,7 +3,7 @@ joi.objectId = require('joi-objectid')(joi);
 const { ValidationTypeEnum } = require('../../enums');
 
 module.exports = {
-  createTourCategorySchema: joi.object({
+  tourCategorySchema: joi.object({
     name: joi
       .string()
       .required()
@@ -20,7 +20,7 @@ module.exports = {
         [ValidationTypeEnum.MinLength]: 'Max participants must be greater than 0',
         [ValidationTypeEnum.NumberInteger]: 'Max participants must be an integer',
       }),
-    desc: joi.string().optional(),
+    desc: joi.string().optional().allow(''),
   }),
   categoryIdSchema: joi.object({
     id: joi

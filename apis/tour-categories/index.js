@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const ctrl = require('./controller');
-const { ValidationPayloadMiddleware, AuthGuard } = require('../../middlewares');
-const { createTourCategorySchema, categoryIdSchema } = require('./validations');
 const { RolesEnum } = require('../../enums');
+const { tourCategorySchema, categoryIdSchema } = require('./validations');
+const { ValidationPayloadMiddleware, AuthGuard } = require('../../middlewares');
 
 router
   .route('/:id')
@@ -11,12 +11,12 @@ router
     AuthGuard([RolesEnum.Administrator, RolesEnum.Coordinator]),
   )
   .get(ctrl.getTourCategoryById)
-  .patch(ctrl.updateTourCategory)
+  .patch(ValidationPayloadMiddleware('body', tourCategorySchema), ctrl.updateTourCategory)
   .delete(ctrl.removeTourCategory);
 
 router
   .route('/')
   .get(ctrl.getTourCategories)
-  .post(ValidationPayloadMiddleware('body', createTourCategorySchema), ctrl.createTourCategory);
+  .post(ValidationPayloadMiddleware('body', tourCategorySchema), ctrl.createTourCategory);
 
 module.exports = router;

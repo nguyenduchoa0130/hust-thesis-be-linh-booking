@@ -3,6 +3,7 @@ const { TourCategoriesService } = require('../../services');
 const { catchAsync, errorsUtil } = require('../../utils');
 
 module.exports = {
+  // GET
   getTourCategories: catchAsync(async (req, res) => {
     const categories = await TourCategoriesService.getAll();
     return res.status(HttpStatusCodeEnum.Ok).json({
@@ -11,6 +12,7 @@ module.exports = {
       data: categories,
     });
   }),
+  // GET
   getTourCategoryById: catchAsync(async (req, res) => {
     const category = await TourCategoriesService.getById(req.params.id);
     if (!category) {
@@ -22,6 +24,7 @@ module.exports = {
       data: category,
     });
   }),
+  // POST
   createTourCategory: catchAsync(async (req, res) => {
     const existingCategory = await TourCategoriesService.getOne({
       name: new RegExp(req.body.name, 'i'),
@@ -36,6 +39,7 @@ module.exports = {
       data: newCategory,
     });
   }),
+  // PATCH
   updateTourCategory: catchAsync(async (req, res) => {
     const category = await TourCategoriesService.getById(req.params.id);
     if (!category) {
@@ -56,6 +60,7 @@ module.exports = {
       data: updatedCategory,
     });
   }),
+  // DELETE
   removeTourCategory: catchAsync(async (req, res) => {
     const category = await TourCategoriesService.getById(req.params.id);
     if (!category) {
