@@ -1,4 +1,5 @@
 const joi = require('joi');
+joi.objectId = require('joi-objectid')(joi);
 const { ValidationTypeEnum } = require('../../enums');
 
 module.exports = {
@@ -20,5 +21,13 @@ module.exports = {
         [ValidationTypeEnum.NumberInteger]: 'Max participants must be an integer',
       }),
     desc: joi.string().optional(),
+  }),
+  categoryIdSchema: joi.object({
+    id: joi
+      .objectId()
+      .required()
+      .messages({
+        [ValidationTypeEnum.Required]: 'Hotel ID is required',
+      }),
   }),
 };

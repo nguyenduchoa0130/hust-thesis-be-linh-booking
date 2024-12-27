@@ -11,7 +11,17 @@ module.exports = {
       data: categories,
     });
   }),
-
+  getTourCategoryById: catchAsync(async (req, res) => {
+    const category = await TourCategoriesService.getById(req.params.id);
+    if (!category) {
+      throw errorsUtil.createNotFound('Tour category not found');
+    }
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: category,
+    });
+  }),
   createTourCategory: catchAsync(async (req, res) => {
     const existingCategory = await TourCategoriesService.getOne({
       name: new RegExp(req.body.name, 'i'),
@@ -25,5 +35,33 @@ module.exports = {
       statusCode: HttpStatusCodeEnum.Created,
       data: newCategory,
     });
+  }),
+  updateTourCategory: catchAsync(async (req, res) => {
+    const category = await TourCategoriesService.getById(req.params.id);
+    if (!category) {
+      throw errorsUtil.createNotFound('Tour category not found');
+    }
+    const existingCategory = await TourCategoriesService.getOne({
+      name: new RegExp(req.body.name, 'i'),
+      _id: { $ne: req.params.id },
+    });
+    if (existingCategory) {
+      throw errorsUtil.createBadRequest('Tour category already exists');
+    }
+    await TourCategoriesService.update({ _id: req.params.id }, req.body);
+    const updatedCategory = await TourCategoriesService.getById(req.params.id);
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: updatedCategory,
+    });
+  }),
+  removeTourCategory: catchAsync(async (req, res) => {
+    const category = await TourCategoriesService.getById(req.params.id);
+    if (!category) {
+      throw errorsUtil.createNotFound('Tour category not found');
+    }
+    await TourCategoriesService.remove({ _id: req.params.id });
+    return res.status(HttpStatusCodeEnum.NoContent).send();
   }),
 };
