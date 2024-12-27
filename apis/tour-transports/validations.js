@@ -1,8 +1,9 @@
 const joi = require('joi');
+joi.objectId = require('joi-objectid')(joi);
 const { ValidationTypeEnum } = require('../../enums');
 
 module.exports = {
-  createTransportSchema: joi.object({
+  tourTransportSchema: joi.object({
     name: joi
       .string()
       .required()
@@ -15,6 +16,14 @@ module.exports = {
       .messages({
         [ValidationTypeEnum.Required]: 'Icon name is required',
       }),
-    desc: joi.string().optional(),
+    desc: joi.string().optional().allow(''),
+  }),
+  tourTransportIdSchema: joi.object({
+    id: joi
+      .objectId()
+      .required()
+      .messages({
+        [ValidationTypeEnum.Required]: 'Transport ID is invalid or not provided',
+      }),
   }),
 };

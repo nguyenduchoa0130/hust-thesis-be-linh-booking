@@ -18,7 +18,7 @@ module.exports = {
       .objectId()
       .required()
       .messages({
-        [ValidationTypeEnum.Required]: 'Destination ID is required',
+        [ValidationTypeEnum.Required]: 'Destination ID is invalid or not provided',
       }),
   }),
 };

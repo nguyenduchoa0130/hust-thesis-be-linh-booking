@@ -27,7 +27,7 @@ module.exports = {
       .objectId()
       .required()
       .messages({
-        [ValidationTypeEnum.Required]: 'Hotel ID is required',
+        [ValidationTypeEnum.Required]: 'Category ID is invalid or not provided',
       }),
   }),
 };
