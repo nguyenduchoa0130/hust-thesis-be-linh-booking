@@ -6,7 +6,9 @@ const { ValidationPayloadMiddleware } = require('../../middlewares');
 router
   .route('/:requestId')
   .all(ValidationPayloadMiddleware('params', requestIdSchema))
-  .get(ctrl.getTourRequestById);
+  .get(ctrl.getTourRequestById)
+  .patch(ctrl.updateTourRequest)
+  .delete(ctrl.deleteTourRequest);
 
 router.route('/').get(ctrl.getTourRequests).post(ctrl.createTourRequest);
 

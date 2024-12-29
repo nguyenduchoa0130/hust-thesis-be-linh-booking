@@ -8,7 +8,8 @@ module.exports = {
         path: 'creator',
         select: { __v: 0, password: 0, updatedAt: 0, createdAt: 0 },
         populate: [{ path: 'role', select: { __v: 0, createdAt: 0, updatedAt: 0 } }],
-      });
+      })
+      .sort({ createdAt: 'desc' });
   },
   getOne: (filterQuery) => {
     return TourRequestsModel.findOne(filterQuery)
@@ -21,5 +22,11 @@ module.exports = {
   },
   create: (payload) => {
     return TourRequestsModel.create(payload);
+  },
+  update: (filterQuery, changes) => {
+    return TourRequestsModel.updateOne(filterQuery, changes);
+  },
+  remove: (filterQuery) => {
+    return TourRequestsModel.deleteOne(filterQuery);
   },
 };
