@@ -1,8 +1,8 @@
 const { UsersModel } = require('../models');
 
 module.exports = {
-  getAll: () => {
-    return UsersModel.find()
+  getAll: (filterQuery) => {
+    return UsersModel.find(filterQuery)
       .select({ __v: 0, createdAt: 0, updatedAt: 0, password: 0 })
       .populate({
         path: 'role',

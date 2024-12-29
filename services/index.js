@@ -10,6 +10,7 @@ module.exports = {
   TourBookingsService: require('./tour-bookings'),
   TourRequestsService: require('./tour-requests'),
   TourSchedulesService: require('./tour-schedules'),
+  TourTemplatesService: require('./tour-templates'),
   TourCategoriesService: require('./tour-categories'),
   PaymentMethodsService: require('./payment-methods'),
   TourTransportsService: require('./tour-transports'),

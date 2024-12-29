@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const tourSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    introduction: { type: String, required: true },
-    price: { type: Number, required: true },
-    dayCount: { type: Number, required: true },
-    nightCount: { type: Number, required: true },
+    name: { type: String },
+    introduction: { type: String },
+    price: { type: Number },
+    dayCount: { type: Number },
+    nightCount: { type: Number },
     status: { type: String },
     thumbnailUrl: { type: String },
     thumbnailPath: { type: String },

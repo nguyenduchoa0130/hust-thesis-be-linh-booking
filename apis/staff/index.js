@@ -5,6 +5,11 @@ const { createUserSchema, userIdSchema } = require('./validations');
 const { AuthGuard, ValidationPayloadMiddleware } = require('../../middlewares');
 
 router
+  .route('/tour-guides')
+  .all(AuthGuard([RolesEnum.Administrator, RolesEnum.Coordinator]))
+  .get(ctrl.getTourGuides);
+
+router
   .route('/users/:userId')
   .all(ValidationPayloadMiddleware('params', userIdSchema))
   .get(AuthGuard([RolesEnum.Administrator, RolesEnum.Coordinator]), ctrl.getUserById)

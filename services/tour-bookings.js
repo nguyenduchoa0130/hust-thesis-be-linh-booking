@@ -13,7 +13,7 @@ module.exports = {
         populate: [{ path: 'paymentMethod', select: { _id: 1, name: 1, icon: 1 } }],
       })
       .populate({
-        path: 'tourGuide',
+        path: 'tourGuides',
         select: { __v: 0, password: 0, createdAt: 0, updatedAt: 0 },
         populate: [{ path: 'role', select: { __v: 0, createdAt: 0, updatedAt: 0 } }],
       })
@@ -64,7 +64,7 @@ module.exports = {
         populate: [{ path: 'paymentMethod', select: { _id: 1, name: 1, icon: 1 } }],
       })
       .populate({
-        path: 'tourGuide',
+        path: 'tourGuides',
         select: { __v: 0, password: 0, createdAt: 0, updatedAt: 0 },
         populate: [{ path: 'role', select: { __v: 0, createdAt: 0, updatedAt: 0 } }],
       })
@@ -115,7 +115,7 @@ module.exports = {
         populate: [{ path: 'paymentMethod', select: { _id: 1, name: 1, icon: 1 } }],
       })
       .populate({
-        path: 'tourGuide',
+        path: 'tourGuides',
         select: { __v: 0, password: 0, createdAt: 0, updatedAt: 0 },
         populate: [{ path: 'role', select: { __v: 0, createdAt: 0, updatedAt: 0 } }],
       })

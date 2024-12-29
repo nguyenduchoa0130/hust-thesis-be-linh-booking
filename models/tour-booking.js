@@ -16,7 +16,7 @@ const tourBookingSchema = new mongoose.Schema(
     notes: { type: String },
     reason: { type: String },
     payment: { type: mongoose.Schema.Types.ObjectId, ref: 'payments' },
-    tourGuide: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    tourGuides: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     coordinator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     customer: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
     tourSchedule: { type: mongoose.Schema.Types.ObjectId, ref: 'tourSchedules', required: true },
