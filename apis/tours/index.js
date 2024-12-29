@@ -3,10 +3,12 @@ const ctrl = require('./controller');
 const { tourSchema, tourIdSchema } = require('./validations');
 const { UploadFileMiddleware, ValidationPayloadMiddleware } = require('../../middlewares');
 
-router.route('/:id').get(ValidationPayloadMiddleware('params', tourIdSchema), ctrl.getTourById);
 router
   .route('/relevant-tours/:id')
-  .get(ValidationPayloadMiddleware('params', tourIdSchema), ctrl.getRelevantTours);
+  .all(ValidationPayloadMiddleware('params', tourIdSchema))
+  .get(ctrl.getRelevantTours);
+
+router.route('/:id').all(ValidationPayloadMiddleware('params', tourIdSchema)).get(ctrl.getTourById);
 
 router
   .route('/')

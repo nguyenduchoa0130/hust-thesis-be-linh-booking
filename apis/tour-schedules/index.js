@@ -1,12 +1,12 @@
 const router = require('express').Router();
-const { ValidationPayloadMiddleware } = require('../../middlewares');
 const ctrl = require('./controller');
 const { tourIdSchema } = require('./validations');
+const { ValidationPayloadMiddleware } = require('../../middlewares');
 
 router
   .route('/tour/:id')
   .all(ValidationPayloadMiddleware('params', tourIdSchema))
-  .get(ctrl.getTourSchedules);
+  .get(ctrl.getScheduleByTourId);
 
 router
   .route('/:id')

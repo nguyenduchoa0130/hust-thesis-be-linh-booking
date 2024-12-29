@@ -31,12 +31,12 @@ app.use('/api/hotels', require('./apis/hotels'));
 app.use('/api/payments', require('./apis/payments'));
 app.use('/api/tour-details', require('./apis/tour-details'));
 app.use('/api/tour-bookings', require('./apis/tour-bookings'));
+app.use('/api/tour-requests', require('./apis/tour-requests'));
 app.use('/api/tour-schedules', require('./apis/tour-schedules'));
 app.use('/api/tour-categories', require('./apis/tour-categories'));
 app.use('/api/tour-transports', require('./apis/tour-transports'));
 app.use('/api/payment-methods', require('./apis/payment-methods'));
 app.use('/api/tour-destinations', require('./apis/tour-destinations'));
-app.use('/api/tour-requirements', require('./apis/tour-requirements'));
 app.use('*', (req, res) => {
   return res.status(HttpStatusCodeEnum.NotFound).json({
     status: 'Not found',

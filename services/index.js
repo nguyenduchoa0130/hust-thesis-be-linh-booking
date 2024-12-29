@@ -8,6 +8,7 @@ module.exports = {
   HotelImagesService: require('./hotel-images'),
   TourDetailsService: require('./tour-details'),
   TourBookingsService: require('./tour-bookings'),
+  TourRequestsService: require('./tour-requests'),
   TourSchedulesService: require('./tour-schedules'),
   TourCategoriesService: require('./tour-categories'),
   PaymentMethodsService: require('./payment-methods'),
@@ -15,5 +16,4 @@ module.exports = {
   TourParticipantsService: require('./tour-participants'),
   TourDestinationsService: require('./tour-destinations'),
   TourDetailImagesService: require('./tour-detail-images'),
-  TourRequirementsService: require('./tour-requirements'),
 };

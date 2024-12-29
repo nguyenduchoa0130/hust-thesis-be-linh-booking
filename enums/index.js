@@ -9,5 +9,5 @@ module.exports = {
   TourBookingStatusEnum: require('./tour-booking-status'),
   PaymentStatusEnum: require('./payment-status'),
   MoMoStatusCodeEnum: require('./mo-mo-status-code'),
-  TourRequirementStatusEnum: require('./tour-requirement-status'),
+  TourRequestStatusEnum: require('./tour-request-status'),
 };

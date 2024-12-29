@@ -1,7 +1,20 @@
 const router = require('express').Router();
-const { UploadFileMiddleware, ValidationPayloadMiddleware } = require('../../middlewares');
+const { RolesEnum } = require('../../enums');
+const {
+  UploadFileMiddleware,
+  ValidationPayloadMiddleware,
+  AuthGuard,
+} = require('../../middlewares');
 const ctrl = require('./controller');
-const { tourDetailSchema } = require('./validations');
+const { tourDetailSchema, tourDetailIdSchema } = require('./validations');
+
+router
+  .route('/:tourDetailId')
+  .all(
+    ValidationPayloadMiddleware('params', tourDetailIdSchema),
+    AuthGuard([RolesEnum.Administrator, RolesEnum.Coordinator]),
+  )
+  .get(ctrl.getTourDetailById);
 
 router
   .route('/')

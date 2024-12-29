@@ -22,7 +22,7 @@ module.exports = {
       data: tourSchedule,
     });
   }),
-  getTourSchedules: catchAsync(async (req, res) => {
+  getScheduleByTourId: catchAsync(async (req, res) => {
     const tourSchedules = await TourSchedulesService.getAll({ tour: req.params.id });
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,

@@ -11,6 +11,19 @@ const constructFilePayloads = (req, files) => {
 };
 
 module.exports = {
+  // GET
+  getTourDetailById: catchAsync(async (req, res) => {
+    const tourDetail = await TourDetailsService.getOne({ _id: req.params.tourDetailId });
+    if (!tourDetail) {
+      throw errorsUtil.createNotFound(`Tour detail not found`);
+    }
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: tourDetail,
+    });
+  }),
+  // POST
   createTourDetail: catchAsync(async (req, res) => {
     const payload = {
       ...req.body,

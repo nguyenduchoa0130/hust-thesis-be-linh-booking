@@ -1,4 +1,5 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const { ValidationTypeEnum } = require('../../enums');
 
 module.exports = {
@@ -8,16 +9,19 @@ module.exports = {
       .messages({
         [ValidationTypeEnum.Required]: 'Title is required',
       }),
-    desc: Joi.string().optional(),
     hotel: Joi.string()
-      .optional()
+      .required()
       .messages({
         [ValidationTypeEnum.Required]: 'Hotel is required',
       }),
     destination: Joi.string()
-      .optional()
+      .required()
       .messages({
         [ValidationTypeEnum.Required]: 'Destination is required',
       }),
+    desc: Joi.string().optional().allow(''),
+  }),
+  tourDetailIdSchema: Joi.object({
+    tourDetailId: Joi.objectId().required(),
   }),
 };
