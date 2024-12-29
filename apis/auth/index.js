@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const ctrl = require('./auth.controller');
+const ctrl = require('./controller');
 const { ValidationPayloadMiddleware } = require('../../middlewares');
-const { signUpSchema, signInSchema, refreshTokenSchema } = require('./auth.validations');
+const { signUpSchema, signInSchema, refreshTokenSchema } = require('./validations');
 
 router.post('/sign-in', ValidationPayloadMiddleware('body', signInSchema), ctrl.signIn);
 

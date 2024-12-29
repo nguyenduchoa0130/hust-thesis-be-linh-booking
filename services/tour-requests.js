@@ -1,8 +1,8 @@
-const { TourRequirementsModel } = require('../models');
+const { TourRequestsModel } = require('../models');
 
 module.exports = {
   getAll: (filterQuery) => {
-    return TourRequirementsModel.find(filterQuery)
+    return TourRequestsModel.find(filterQuery)
       .select({ __v: 0 })
       .populate({
         path: 'creator',
@@ -11,7 +11,7 @@ module.exports = {
       });
   },
   getOne: (filterQuery) => {
-    return TourRequirementsModel.findOne(filterQuery)
+    return TourRequestsModel.findOne(filterQuery)
       .select({ __v: 0 })
       .populate({
         path: 'creator',
@@ -20,6 +20,6 @@ module.exports = {
       });
   },
   create: (payload) => {
-    return TourRequirementsModel.create(payload);
+    return TourRequestsModel.create(payload);
   },
 };

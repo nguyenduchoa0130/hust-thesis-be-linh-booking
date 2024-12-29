@@ -41,7 +41,7 @@ module.exports = {
     gender: joi
       .string()
       .required()
-      .valid('male', 'female', 'others')
+      .valid('male', 'female', 'other')
       .messages({
         [ValidationTypeEnum.Required]: 'Gender is required',
         [ValidationTypeEnum.Valid]: 'Gender is not valid',
