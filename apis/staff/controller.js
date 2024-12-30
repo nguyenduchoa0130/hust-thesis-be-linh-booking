@@ -5,7 +5,14 @@ const { catchAsync, passwordUtil, errorsUtil } = require('../../utils');
 module.exports = {
   // GET
   getUsers: catchAsync(async (req, res) => {
-    const users = await UsersService.getAll();
+    let filterQuery = {};
+    if (req.query.role) {
+      const role = await RolesService.getOne({ name: new RegExp(req.query.role, 'i') });
+      if (role) {
+        filterQuery.role = role._id.toString();
+      }
+    }
+    const users = await UsersService.getAll(filterQuery);
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
@@ -85,16 +92,6 @@ module.exports = {
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
       data: roles,
-    });
-  }),
-  // GET
-  getTourGuides: catchAsync(async (req, res) => {
-    const tourGuideRole = await RolesService.getOne({ name: 'tour_guide' });
-    const tourGuides = await UsersService.getAll({ role: tourGuideRole._id });
-    return res.status(HttpStatusCodeEnum.Ok).json({
-      status: HttpStatusEnum.Success,
-      statusCode: HttpStatusCodeEnum.Ok,
-      data: tourGuides,
     });
   }),
 };

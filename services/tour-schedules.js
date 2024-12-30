@@ -33,4 +33,10 @@ module.exports = {
   create: (payload) => {
     return TourSchedulesModel.create(payload);
   },
+  update: (filterQuery, changes) => {
+    return TourSchedulesModel.updateOne(filterQuery, changes);
+  },
+  remove: (filterQuery) => {
+    return TourSchedulesModel.deleteOne(filterQuery);
+  },
 };

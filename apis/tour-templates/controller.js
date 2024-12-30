@@ -55,7 +55,7 @@ module.exports = {
     }
     const createdDetails = await Promise.all(detailPromises);
     const payload = {
-      name: `#${tourRequest._id.toString().slice(-5)} - ${tourRequest.title}`,
+      name: `Customer - #${tourRequest.creator?._id.toString().slice(-5)} - ${tourRequest.title}`,
       introduction: '',
       price: tourRequest.price,
       dayCount: tourRequest.dayCount,

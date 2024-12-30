@@ -11,7 +11,9 @@ router
 router
   .route('/:id')
   .all(ValidationPayloadMiddleware('params', tourIdSchema))
-  .get(ctrl.getScheduleById);
+  .get(ctrl.getScheduleById)
+  .patch(ctrl.updateSchedule)
+  .delete(ctrl.deleteSchedule);
 
 router.route('/').get(ctrl.getSchedules).post(ctrl.createSchedule);
 

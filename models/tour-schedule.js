@@ -4,6 +4,7 @@ const { TourScheduleStatusEnum } = require('../enums');
 const tourScheduleSchema = new mongoose.Schema(
   {
     tour: { type: mongoose.Schema.Types.ObjectId, ref: 'tours' },
+    customer: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     startAt: { type: Date, required: true },
     endAt: { type: Date, required: true },
     status: { type: String, default: TourScheduleStatusEnum.Active },

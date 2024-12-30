@@ -1,9 +1,16 @@
 const { TourStatusEnum, HttpStatusCodeEnum, HttpStatusEnum } = require('../../enums');
-const { ToursService } = require('../../services');
+const { ToursService, TourCategoriesService } = require('../../services');
 const { catchAsync, fileUtil, errorsUtil } = require('../../utils');
 
 module.exports = {
   getTours: catchAsync(async (req, res) => {
+    const filterQuery = { $and: [] };
+    if (req.query.name) {
+    }
+    if (req.query.categories) {
+    }
+    if (req.query.destinations) {
+    }
     const tours = await ToursService.getAll(req.body.query);
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,

@@ -2,7 +2,7 @@ const { ToursModel } = require('../models');
 
 module.exports = {
   getAll: (filterQuery) => {
-    return ToursModel.find(filterQuery)
+    return ToursModel.find()
       .select({ thumbnailPath: 0, __v: 0, createdAt: 0, updatedAt: 0 })
       .populate({
         path: 'category',
