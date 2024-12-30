@@ -93,4 +93,10 @@ module.exports = {
   create: (payload) => {
     return ToursModel.create(payload);
   },
+  update: (filterQuery, changes) => {
+    return ToursModel.updateOne(filterQuery, changes);
+  },
+  remove: (filterQuery) => {
+    return ToursModel.deleteOne(filterQuery);
+  },
 };
