@@ -71,7 +71,7 @@ module.exports = {
         <h2>Hello, ${userData.fullName}</h2>
         <p>Thank you for showing interest in our tour. Below are the details of the tour you selected:</p>
         <ul>
-          <li><strong>Price:</strong> ${tourData.price.toLocaleString()} VND</li>
+          <li><strong>Price:</strong> ${tourData.price}</li>
           <li><strong>Duration:</strong> ${tourData.dayCount} days, ${
       tourData.nightCount
     } nights</li>
