@@ -10,10 +10,14 @@ router
   .all([AuthGuard([RolesEnum.Administrator, RolesEnum.Coordinator], true)])
   .get(ValidationPayloadMiddleware('params', userIdSchema), ctrl.getTourBookingByUserId);
 
+router.route('/assignments/:tourGuideId').get(ctrl.getAssignments);
+
 router
   .route('/:tourBookingId')
   .all(ValidationPayloadMiddleware('params', tourBookingIdSchema))
-  .get(ctrl.getTourBookingById);
+  .get(ctrl.getTourBookingById)
+  .patch(ctrl.updateTourBooking)
+  .delete(ctrl.deleteTourBooking);
 
 router
   .route('/')

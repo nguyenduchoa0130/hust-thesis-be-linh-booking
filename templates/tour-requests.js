@@ -1,21 +1,66 @@
-module.exports = {
-  generateTourStatusRequestMailForCustomer: (tourRequest) => {
-    const { fullName, title, status, notes, requirements, customerNotes, price } = tourRequest;
+const dayjs = require('dayjs');
 
-    const requirementsHTML = requirements
+const getStatusBadge = (status) => {
+  const statusColors = {
+    pending: '#FFC107', // Yellow
+    accepted: '#4CAF50', // Green
+    declined: '#F44336', // Red
+    negotiating: '#2196F3', // Blue
+  };
+  return `
+    <span style="
+      display: inline-block;
+      padding: 5px 10px;
+      color: #ffffff;
+      background-color: ${statusColors[status.toLowerCase()] || '#888888'};
+      border-radius: 8px;
+      font-size: 0.9em;
+      font-weight: bold;
+      text-transform: capitalize;
+    ">
+      ${status.charAt(0).toUpperCase() + status.slice(1)}
+    </span>
+  `;
+};
+
+const formatDate = (date) => {
+  if (date) {
+    return dayjs(date).format('DD/MM/YYYY');
+  }
+};
+
+const generateTourRequirementsHTML = (requirements) => {
+  if (requirements && requirements.length) {
+    return requirements
       .map(
-        (req, index) => `
-          <div>
-            <p><strong>Destination ${index + 1}:</strong></p>
-            <p>- Destination: ${req.destination}</p>
-            <p>- Description: ${req.desc}</p>
-            <p class="status">- Status: ${req.status}</p>
-            <p>- Notes: ${req.notes || 'N/A'}</p>
-          </div>
-          <hr>
-        `,
+        (req) => `
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;text-transform: capitalize;">
+            ${req.destination}
+          </td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${req.desc}</td>
+          <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+            ${getStatusBadge(req.status)}
+          </td>
+          ${
+            req.notes &&
+            req.notes.trim() &&
+            `<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${req.notes}</td>`
+          }
+        </tr>
+      `,
       )
       .join('');
+  }
+};
+
+module.exports = {
+  generateTourRequestStatusEmail: (tourRequest) => {
+    const { _id, fullName, title, startAt, endAt, budget, price, status, requirements, notes } =
+      tourRequest;
+
+    const currentYear = new Date().getFullYear();
+    const requirementsHtml = generateTourRequirementsHTML(requirements);
 
     return `
       <!DOCTYPE html>
@@ -23,198 +68,100 @@ module.exports = {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tour Request Update</title>
+        <title>[Linh Booking] Your Tour Request #${_id?.toString().slice(-5)} Was Updated</title>
         <style>
           body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
+            background-color: #f9f9f9;
             color: #333333;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
           }
           .email-container {
-            max-width: 600px;
+            max-width: 1000px;
             margin: 20px auto;
+            background-color: #ffffff;
             padding: 20px;
-            background: #ffffff;
             border: 1px solid #dddddd;
             border-radius: 8px;
           }
           .header {
             text-align: center;
-            padding: 10px 0;
-            background: #4CAF50;
-            color: white;
-            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
           }
-          .content {
-            padding: 20px;
-          }
-          .status {
-            text-transform: capitalize;
-          }
-          .content h2 {
+          .header h1 {
             color: #4CAF50;
           }
-          .content p {
-            margin: 10px 0;
-          }
-          .requirements {
-            background: #f4f4f4;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+          .content {
+            line-height: 1.6;
           }
           .footer {
             text-align: center;
+            margin-top: 20px;
             font-size: 0.9em;
             color: #777777;
+          }
+          .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
             margin-top: 20px;
+          }
+          .button:hover {
+            background-color: #45a049;
           }
         </style>
       </head>
       <body>
         <div class="email-container">
           <div class="header">
-            <h1>Tour Request Update</h1>
+            <h1>Tour Request Status</h1>
           </div>
           <div class="content">
             <p>Dear <strong>${fullName}</strong>,</p>
-            <p>Thank you for your recent tour request. Below are the details of your request:</p>
-            <h2>Tour Details</h2>
-            <p><strong>Title:</strong> ${title}</p>
-            <p class="status"><strong>Overall Status:</strong> ${status}</p>
-            <p><strong>Negotiable price:</strong> ${price}</p>
-            <p><strong>Notes:</strong> ${notes || 'No additional notes at this time'}</p>
-            
-            <h2>Your Requirements</h2>
-            <div class="requirements">
-              ${requirementsHTML}
-            </div>
-  
-            ${customerNotes ? `<h2>Customer Notes</h2><p>${customerNotes}</p>` : ''}
-  
-            <p>Please let us know if there is anything else we can assist you with. We look forward to finalizing your travel plans.</p>
-            <p>Best regards,</p>
-            <p><strong>Linh Booking</strong></p>
+            <p>Thank you for creating a custom tour request with us. Below are the details of your current tour:</p>
+            <ul>
+              <li><strong style="text-transform: capitalize;">Request:</strong> ${title}</li>
+              <li style="margin-top: 8px;"><strong>Start Date: </strong> 
+                ${startAt ? formatDate(startAt) : ''}
+              </li>
+              <li style="margin-top: 8px;"><strong>End Date: </strong> 
+                ${endAt ? formatDate(endAt) : ''}
+              </li>
+              <li style="margin-top: 8px;"><strong>Budget:</strong> ${budget}</li>
+              <li style="margin-top: 8px;"><strong>Negotiable Price:</strong> ${price}</li>
+              <li style="margin-top: 8px;"><strong>Status:</strong> ${getStatusBadge(status)}</li>
+              ${notes && notes.trim() && `<li><strong>Notes:</strong> ${notes}</li>`}
+            </ul>
+            <p>Here are your specific requirements:</p>
+            ${
+              requirementsHtml
+                ? `
+                <table style='width: 100%; border-collapse: collapse; margin-top: 20px;'>
+                  <thead>
+                    <tr style='background-color: #f2f2f2; text-align: left;'>
+                      <th style='padding: 10px; border: 1px solid #ddd;text-align: center;'>Destination</th>
+                      <th style='padding: 10px; border: 1px solid #ddd;text-align: center;'>Description</th>
+                      <th style='padding: 10px; border: 1px solid #ddd;text-align: center;'>Status</th>
+                      <th style='padding: 10px; border: 1px solid #ddd;text-align: center;'>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>${requirementsHtml}</tbody>
+                </table>`
+                : null
+            }
+            <p>If you have any questions or would like to make changes, please don't hesitate to contact us.</p>
           </div>
           <div class="footer">
-            <p>&copy; 2024 Linh Booking. All rights reserved.</p>
+            <p>Thank you for choosing our service!</p>
+            <p>&copy; ${currentYear} Your Travel Company. All rights reserved.</p>
           </div>
         </div>
       </body>
       </html>
     `;
-  },
-  generateTourRequestStatusMailForStaff: (tourRequest) => {
-    const { fullName, title, customerStatus, customerNotes, requirements, status, price } =
-      tourRequest;
-
-    const requirementsHTML = requirements
-      .map(
-        (req, index) => `
-        <div>
-          <p><strong>Destination ${index + 1}:</strong></p>
-          <p>- Destination: ${req.destination}</p>
-          <p>- Description: ${req.desc}</p>
-          <p>- Customer Requirement Status: ${req.status}</p>
-          <p>- Notes: ${req.notes || 'N/A'}</p>
-        </div>
-        <hr>
-      `,
-      )
-      .join('');
-
-    return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Customer Status Update</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          line-height: 1.6;
-          color: #333333;
-          margin: 0;
-          padding: 0;
-          background-color: #f9f9f9;
-        }
-        .email-container {
-          max-width: 600px;
-          margin: 20px auto;
-          padding: 20px;
-          background: #ffffff;
-          border: 1px solid #dddddd;
-          border-radius: 8px;
-        }
-        .header {
-          text-align: center;
-          padding: 10px 0;
-          background: #007BFF;
-          color: white;
-          border-radius: 8px 8px 0 0;
-        }
-        .content {
-          padding: 20px;
-        }
-        .content h2 {
-          color: #007BFF;
-        }
-        .content p {
-          margin: 10px 0;
-        }
-        .requirements {
-          background: #f4f4f4;
-          padding: 10px;
-          border-radius: 8px;
-          margin-bottom: 20px;
-        }
-        .footer {
-          text-align: center;
-          font-size: 0.9em;
-          color: #777777;
-          margin-top: 20px;
-        }
-        .status {
-          text-transform: capitalize;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="email-container">
-        <div class="header">
-          <h1>Customer Status Update</h1>
-        </div>
-        <div class="content">
-          <p>Dear <strong>[Staff Member]</strong>,</p>
-          <p>The following tour request has been updated by the customer:</p>
-          <h2>Customer Details</h2>
-          <p><strong>Customer Name:</strong> ${fullName}</p>
-          <p><strong>Request Title:</strong> ${title}</p>
-          <p class="status"><strong>Customer's New Status:</strong> ${customerStatus}</p>
-          ${customerNotes ? `<p><strong>Customer Notes:</strong> ${customerNotes}</p>` : ''}
-          
-          <h2>Tour Requirements</h2>
-          <div class="requirements">
-            ${requirementsHTML}
-          </div>
-          
-          <h2>Overall Status</h2>
-          <p class="status"><strong>Current Overall Status:</strong> ${status}</p>
-
-          <p>Please review the updated information and take the necessary action.</p>
-          <p>Best regards,</p>
-          <p><strong>Linh Booking</strong></p>
-        </div>
-        <div class="footer">
-          <p>&copy; 2024 Linh Booking. All rights reserved.</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
   },
 };

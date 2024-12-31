@@ -10,6 +10,8 @@ const tourBookingSchema = new mongoose.Schema(
         TourBookingStatusEnum.Pending,
         TourBookingStatusEnum.Confirmed,
         TourBookingStatusEnum.Cancelled,
+        TourBookingStatusEnum.Cancelling,
+        TourBookingStatusEnum.Completed,
       ],
       default: TourBookingStatusEnum.Pending,
     },

@@ -18,4 +18,34 @@ module.exports = {
   update: (filterQuery, changes) => {
     return PaymentsModel.updateOne(filterQuery, changes);
   },
+  getStatistics: async () => {
+    const stats = await PaymentsModel.aggregate([
+      {
+        $match: { status: { $ne: 'Pending' } },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' },
+            status: '$status',
+          },
+          totalAmount: { $sum: '$amount' },
+        },
+      },
+      {
+        $group: {
+          _id: { year: '$_id.year', month: '$_id.month' },
+          statuses: {
+            $push: {
+              status: '$_id.status',
+              totalAmount: '$totalAmount',
+            },
+          },
+        },
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1 } },
+    ]);
+    return stats;
+  },
 };

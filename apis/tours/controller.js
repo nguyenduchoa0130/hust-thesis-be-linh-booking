@@ -4,6 +4,7 @@ const {
   TourCategoriesService,
   TourDetailsService,
   TourDetailImagesService,
+  TourSchedulesService,
 } = require('../../services');
 const { catchAsync, fileUtil, errorsUtil } = require('../../utils');
 
@@ -105,7 +106,9 @@ module.exports = {
       promises.push(TourDetailImagesService.remove(imageIds));
       promises.push(TourDetailsService.remove({ _id: detail._id }));
     }
+    promises.push(TourSchedulesService.remove({ tour: req.params.id }));
     promises.push(ToursService.remove({ _id: req.params.id }));
+    await Promise.all(promises);
     return res.status(HttpStatusCodeEnum.NoContent).send();
   }),
 };

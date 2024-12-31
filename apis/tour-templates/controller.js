@@ -1,4 +1,4 @@
-const { HttpStatusCodeEnum, HttpStatusEnum } = require('../../enums');
+const { HttpStatusCodeEnum, HttpStatusEnum, TourRequestStatusEnum } = require('../../enums');
 const {
   ToursService,
   TourRequestsService,
@@ -27,9 +27,13 @@ module.exports = {
     }
     await TourTemplatesService.remove({ tourRequest: tourRequest._id.toString() });
     const customCategory = await TourCategoriesService.getOne({ name: new RegExp('custom', 'i') });
+    // Create tour details
     const detailPromises = [];
     if (tourRequest.requirements.length) {
       for (const requirement of tourRequest.requirements) {
+        if (requirement.status !== TourRequestStatusEnum.Accepted) {
+          continue;
+        }
         const destination = await TourDestinationsService.getOne({
           name: new RegExp(requirement.destination, 'gi'),
         });
@@ -54,8 +58,10 @@ module.exports = {
       }
     }
     const createdDetails = await Promise.all(detailPromises);
-    const payload = {
-      name: `Customer - #${tourRequest.creator?._id.toString().slice(-5)} - ${tourRequest.title}`,
+    // Create tour
+    const requestTitle = `Req - #${tourRequest._id.toString().slice(-5)}`;
+    const tourPayload = {
+      name: `${requestTitle} - ${tourRequest.title}`,
       introduction: '',
       price: tourRequest.price,
       dayCount: tourRequest.dayCount,
@@ -63,20 +69,20 @@ module.exports = {
       category: customCategory?._id,
       transports: [],
       details: createdDetails.map((detail) => detail._id.toString()),
+      owner: tourRequest?.customer?._id.toString(),
     };
-    const newTour = await ToursService.create(payload);
+    const newTour = await ToursService.create(tourPayload);
+    // Create tour template
     const tourTemplate = await TourTemplatesService.create({
-      title: `#${tourRequest._id.toString().slice(-5)} - ${tourRequest.fullName} - ${
-        tourRequest.title
-      }`,
-      tourRequest: tourRequest._id,
-      tour: newTour._id,
+      title: `${requestTitle} - ${tourRequest.title}`,
+      tourRequest: tourRequest._id.toString(),
+      tour: newTour._id.toString(),
     });
-    const { __v, createdAt, updatedAt, ...info } = tourTemplate.toJSON();
+    // Return response
     return res.status(HttpStatusCodeEnum.Created).json({
       status: HttpStatusEnum.Created,
       statusCode: HttpStatusCodeEnum.Created,
-      data: info,
+      data: tourTemplate,
     });
   }),
 };

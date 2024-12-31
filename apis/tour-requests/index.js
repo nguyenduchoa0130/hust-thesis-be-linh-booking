@@ -3,6 +3,8 @@ const ctrl = require('./controller');
 const { requestIdSchema } = require('./validations');
 const { ValidationPayloadMiddleware } = require('../../middlewares');
 
+router.route('/notification').post(ctrl.sendNotification);
+
 router
   .route('/:requestId')
   .all(ValidationPayloadMiddleware('params', requestIdSchema))

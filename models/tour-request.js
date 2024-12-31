@@ -4,6 +4,7 @@ const { TourRequestStatusEnum } = require('../enums');
 const tourRequestSchema = new mongoose.Schema(
   {
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    customer: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     fullName: { type: String },
     email: { type: String },
     phone: { type: String },

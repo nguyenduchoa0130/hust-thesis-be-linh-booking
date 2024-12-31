@@ -13,6 +13,7 @@ const tourSchema = new mongoose.Schema(
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'tourCategories' },
     transports: [{ type: mongoose.Schema.Types.ObjectId, ref: 'tourTransports' }],
     details: [{ type: mongoose.Schema.Types.ObjectId, ref: 'tourDetails' }],
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
   },
   {
     timestamps: true,

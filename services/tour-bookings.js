@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { TourBookingsModel } = require('../models');
 
 module.exports = {
@@ -153,6 +154,76 @@ module.exports = {
         ],
       })
       .sort({ createdAt: 'desc' });
+  },
+  getAssignments: (tourGuideId) => {
+    return TourBookingsModel.aggregate([
+      {
+        $match: {
+          tourGuides: new mongoose.Types.ObjectId(tourGuideId),
+        },
+      },
+      {
+        $lookup: {
+          from: 'tourschedules', // Assuming the tourSchedule is in the 'tourSchedules' collection
+          localField: 'tourSchedule',
+          foreignField: '_id',
+          as: 'tourScheduleDetails',
+        },
+      },
+      {
+        $lookup: {
+          from: 'tours', // Collection name for tours
+          localField: 'tourScheduleDetails.tour',
+          foreignField: '_id',
+          as: 'tourDetails',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users', // Replace with your actual collection name
+          localField: 'customer',
+          foreignField: '_id',
+          as: 'customerDetails',
+        },
+      },
+      {
+        $lookup: {
+          from: 'tourparticipants', // Replace with your actual collection name
+          localField: '_id',
+          foreignField: 'tourBooking',
+          as: 'participants',
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          customer: {
+            _id: { $arrayElemAt: ['$customerDetails._id', 0] },
+            fullName: { $arrayElemAt: ['$customerDetails.fullName', 0] },
+            email: { $arrayElemAt: ['$customerDetails.email', 0] },
+            phone: { $arrayElemAt: ['$customerDetails.phone', 0] },
+          },
+          tourSchedule: {
+            _id: { $arrayElemAt: ['$tourScheduleDetails._id', 0] },
+            tour: { $arrayElemAt: ['$tourScheduleDetails.tour', 0] },
+            startAt: { $arrayElemAt: ['$tourScheduleDetails.startAt', 0] },
+            endAt: { $arrayElemAt: ['$tourScheduleDetails.endAt', 0] },
+            tour: {
+              _id: { $arrayElemAt: ['$tourDetails._id', 0] },
+              name: { $arrayElemAt: ['$tourDetails.name', 0] },
+              dayCount: { $arrayElemAt: ['$tourDetails.dayCount', 0] },
+              nightCount: { $arrayElemAt: ['$tourDetails.nightCount', 0] },
+            },
+          },
+          participants: {
+            name: { $arrayElemAt: ['$participants.name', 0] },
+            phone: { $arrayElemAt: ['$participants.phone', 0] },
+            email: { $arrayElemAt: ['$participants.email', 0] },
+            gender: { $arrayElemAt: ['$participants.gender', 0] },
+          },
+        },
+      },
+    ]);
   },
   create: (payload) => {
     return TourBookingsModel.create(payload);

@@ -111,4 +111,30 @@ module.exports = {
       return res.status(HttpStatusCodeEnum.NoContent).send();
     }
   }),
+  updatePayment: catchAsync(async (req, res) => {
+    const payload = {
+      ...req.body,
+      updatedAt: new Date().toJSON(),
+    };
+    const payment = await PaymentsService.getOne({ paymentId: req.params.paymentId });
+    if (!payment) {
+      throw errorsUtil.createNotFound(`Payment not found. Can't update status`);
+    }
+    await PaymentsService.update({ paymentId: req.params.paymentId }, payload);
+    const updatedPayment = await PaymentsService.getOne({ paymentId: req.params.paymentId });
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Updated,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: updatedPayment,
+    });
+  }),
+  // GET
+  getStatistics: catchAsync(async (req, res) => {
+    const statistics = await PaymentsService.getStatistics();
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: statistics,
+    });
+  }),
 };

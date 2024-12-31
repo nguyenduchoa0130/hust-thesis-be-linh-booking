@@ -51,39 +51,18 @@ module.exports = {
   }),
   // PATCH
   updateTourRequest: catchAsync(async (req, res) => {
-    const request = await TourRequestsService.getOne({ _id: req.params.requestId });
-    if (!request) {
+    const tourRequest = await TourRequestsService.getOne({ _id: req.params.requestId });
+    if (!tourRequest) {
       throw errorsUtil.createNotFound(`Tour request not found`);
     }
-    const {
-      isStartCreatingTour,
-      isSendNotificationToStaff,
-      isSendNotificationToCustomer,
-      ...payload
-    } = req.body;
-    payload.updatedAt = new Date().toJSON();
+    // Construct payload
+    const payload = {
+      ...req.body,
+      updatedAt: new Date().toJSON(),
+    };
     // Update
     await TourRequestsService.update({ _id: req.params.requestId }, payload);
     const updatedTourRequest = await TourRequestsService.getOne({ _id: req.params.requestId });
-    const tourRequestId = updatedTourRequest._id.toString().slice(-5);
-    // Create tour template
-    if (isStartCreatingTour) {
-    }
-    // Send notification to customer and staff
-    if (isSendNotificationToCustomer) {
-      await sendMailUtil(
-        updatedTourRequest.email,
-        `[Tour Booking] - Notify - Tour Request #${tourRequestId} Was Updated By Staff`,
-        tourRequestsTemplates.generateTourStatusRequestMailForCustomer(updatedTourRequest),
-      );
-    }
-    if (isSendNotificationToStaff) {
-      await sendMailUtil(
-        process.env.SYSTEM_HOST_EMAIL,
-        `[Tour Booking] - Notify - Tour Request #${tourRequestId} Was Updated By Customer`,
-        tourRequestsTemplates.generateTourStatusRequestMailForStaff(updatedTourRequest),
-      );
-    }
     // Return response
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
@@ -99,5 +78,29 @@ module.exports = {
     }
     await TourRequestsService.remove({ _id: req.params.requestId });
     return res.status(HttpStatusCodeEnum.NoContent).send();
+  }),
+  // POST
+  sendNotification: catchAsync(async (req, res) => {
+    const { to, requestId } = req.body;
+    const tourRequest = await TourRequestsService.getOne({ _id: requestId });
+    if (!tourRequest) {
+      throw errorsUtil.createNotFound(`Tour request not found`);
+    }
+    switch (to) {
+      case 'customer': {
+        const customerEmail = tourRequest.email;
+        const subject = `[Linh Booking] Your tour request #${requestId.slice(-5)} Was Updated`;
+        const mailTemplate = tourRequestsTemplates.generateTourRequestStatusEmail(tourRequest);
+        await sendMailUtil(customerEmail, subject, mailTemplate);
+        break;
+      }
+      case 'staff': {
+        break;
+      }
+      default: {
+        throw errorsUtil.createBadRequest(`Invalid notification type`);
+      }
+    }
+    return res.status(204).send();
   }),
 };
