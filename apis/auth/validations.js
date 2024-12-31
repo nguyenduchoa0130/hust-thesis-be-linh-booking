@@ -73,4 +73,14 @@ module.exports = {
         [ValidationTypeEnum.Email]: 'Invalid email',
       }),
   }),
+  sendResetPassword: joi.object({
+    email: joi
+      .string()
+      .required()
+      .email()
+      .messages({
+        [ValidationTypeEnum.Required]: 'Email is required',
+        [ValidationTypeEnum.Email]: 'Invalid email',
+      }),
+  }),
 };

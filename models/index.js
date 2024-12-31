@@ -18,4 +18,5 @@ module.exports = {
   TourParticipantsModel: require('./tour-participant'),
   TourDestinationsModel: require('./tour-destination'),
   TourDetailImagesModel: require('./tour-detail-image'),
+  ForgotPassword: require('./forgot-password'),
 };

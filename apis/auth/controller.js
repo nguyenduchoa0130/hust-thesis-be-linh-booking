@@ -1,5 +1,6 @@
+const crypto = require('crypto');
 const { HttpStatusEnum, HttpStatusCodeEnum, RolesEnum } = require('../../enums');
-const { UsersService, TokensService, RolesService } = require('../../services');
+const { UsersService, TokensService, RolesService, ForgotPasswordService } = require('../../services');
 const { catchAsync, jwtUtil, errorsUtil, passwordUtil } = require('../../utils');
 
 module.exports = {
@@ -90,5 +91,41 @@ module.exports = {
     } catch (error) {
       throw errorsUtil.createNotFound('Your Token was expired.');
     }
+  }),
+  handleForgotPassword: catchAsync(async (req, res) => {
+    const { email } = req.body;
+    const user = await UsersService.getOne({ email: email });
+    console.log(JSON.stringify(user));
+
+    // Find user by email
+    if (!user) {
+      throw errorsUtil.createNotFound("Can't not find any users with email '" + email + "'");
+    }
+
+    // Delete forgot password record if mode is update
+    const deleteResult = await ForgotPasswordService.remove({ userId: user.id });
+    console.log('deleteResult' + JSON.stringify(deleteResult));
+    // Generate a 6-character confirmation code
+    const confirmationCode = crypto.randomBytes(3).toString('hex');
+
+    // Set expiration time to 5 minutes from now
+    const expiration = new Date(Date.now() + 5 * 60 * 1000);
+    const forgetPasswordRecord = await ForgotPasswordService.create({
+      userId: user.id,
+      confirmationCode,
+      expiration,
+      email,
+    });
+
+    // const mailTemplate = createForgotPasswordMail(
+    //   `${user.firstName} ${user.lastName}`,
+    //   confirmationCode,
+    // );
+    // await sendMail(user.email, `ImGallery: Recovery Password`, mailTemplate);
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: forgetPasswordRecord,
+    });
   }),
 };
