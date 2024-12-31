@@ -1,8 +1,7 @@
 const crypto = require('crypto');
 const { HttpStatusEnum, HttpStatusCodeEnum, RolesEnum } = require('../../enums');
 const { UsersService, TokensService, RolesService, ForgotPasswordService } = require('../../services');
-const { catchAsync, jwtUtil, errorsUtil, passwordUtil } = require('../../utils');
-
+const { catchAsync, jwtUtil, errorsUtil, passwordUtil, createTemplateEmail, sendMailUtil } = require('../../utils');
 module.exports = {
   signIn: catchAsync(async (req, res) => {
     const user = await UsersService.getOne({ email: req.body.email });
@@ -92,6 +91,7 @@ module.exports = {
       throw errorsUtil.createNotFound('Your Token was expired.');
     }
   }),
+
   handleForgotPassword: catchAsync(async (req, res) => {
     const { email } = req.body;
     const user = await UsersService.getOne({ email: email });
@@ -117,15 +117,41 @@ module.exports = {
       email,
     });
 
-    // const mailTemplate = createForgotPasswordMail(
-    //   `${user.firstName} ${user.lastName}`,
-    //   confirmationCode,
-    // );
-    // await sendMail(user.email, `ImGallery: Recovery Password`, mailTemplate);
+    const mailTemplate = createTemplateEmail.createForgotPasswordMail(
+      `${user.fullName}`,
+      confirmationCode,
+    );
+    await sendMailUtil(user.email, `Booking Tour: Recovery Password`, mailTemplate);
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
       data: forgetPasswordRecord,
+    });
+  }),
+
+  resetPassword: catchAsync(async (req, res) => {
+    const { email, password, code } = req.body;
+
+    // Delete forgot password record if mode is update
+    const forgetPasswordRecord = await ForgotPasswordService.getOne({ email: email , confirmationCode: code});
+    if (!forgetPasswordRecord) {
+      throw errorsUtil.createNotFound("Wrong code for email'" + email + "'");
+    }
+
+    const user = await UsersService.getOne({ email: email });
+    console.log(JSON.stringify(user));
+    
+    // Find user by email
+    if (!user) {
+      throw errorsUtil.createNotFound("Can't not find any users with email '" + email + "'");
+    }
+    const hashedPassword = await passwordUtil.hash(password);
+    await UsersService.update({ _id: user._id }, { password: hashedPassword });
+
+    return res.status(HttpStatusCodeEnum.Ok).json({
+      status: HttpStatusEnum.Success,
+      statusCode: HttpStatusCodeEnum.Ok,
+      data: 'Change password successfully',
     });
   }),
 };
