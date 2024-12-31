@@ -14,7 +14,9 @@ router
     ValidationPayloadMiddleware('params', tourDetailIdSchema),
     AuthGuard([RolesEnum.Administrator, RolesEnum.Coordinator]),
   )
-  .get(ctrl.getTourDetailById);
+  .get(ctrl.getTourDetailById)
+  .patch(UploadFileMiddleware.fields([{ name: 'images', maxCount: 5 }]), ctrl.updateTourDetail)
+  .delete(ctrl.deleteTourDetail);
 
 router
   .route('/')

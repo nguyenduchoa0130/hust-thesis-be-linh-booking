@@ -8,7 +8,12 @@ router
   .all(ValidationPayloadMiddleware('params', tourIdSchema))
   .get(ctrl.getRelevantTours);
 
-router.route('/:id').all(ValidationPayloadMiddleware('params', tourIdSchema)).get(ctrl.getTourById);
+router
+  .route('/:id')
+  .all(ValidationPayloadMiddleware('params', tourIdSchema))
+  .get(ctrl.getTourById)
+  .patch(UploadFileMiddleware.fields([{ name: 'thumbnail', maxCount: 1 }]), ctrl.updateTour)
+  .delete(ctrl.removeTour);
 
 router
   .route('/')

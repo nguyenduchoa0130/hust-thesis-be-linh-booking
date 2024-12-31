@@ -36,4 +36,10 @@ module.exports = {
   create: (payload) => {
     return TourDetailsModel.create(payload);
   },
+  update: (filterQuery, changes) => {
+    return TourDetailsModel.updateOne(filterQuery, changes);
+  },
+  remove: (filterQuery) => {
+    return TourDetailsModel.deleteOne(filterQuery);
+  },
 };
