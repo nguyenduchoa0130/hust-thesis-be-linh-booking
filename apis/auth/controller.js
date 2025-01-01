@@ -95,8 +95,6 @@ module.exports = {
   handleForgotPassword: catchAsync(async (req, res) => {
     const { email } = req.body;
     const user = await UsersService.getOne({ email: email });
-    console.log(JSON.stringify(user));
-
     // Find user by email
     if (!user) {
       throw errorsUtil.createNotFound("Can't not find any users with email '" + email + "'");
@@ -104,7 +102,6 @@ module.exports = {
 
     // Delete forgot password record if mode is update
     const deleteResult = await ForgotPasswordService.remove({ userId: user.id });
-    console.log('deleteResult' + JSON.stringify(deleteResult));
     // Generate a 6-character confirmation code
     const confirmationCode = crypto.randomBytes(3).toString('hex');
 
