@@ -17,4 +17,5 @@ module.exports = {
   TourParticipantsService: require('./tour-participants'),
   TourDestinationsService: require('./tour-destinations'),
   TourDetailImagesService: require('./tour-detail-images'),
+  ForgotPasswordService: require('./forgot-password'),
 };

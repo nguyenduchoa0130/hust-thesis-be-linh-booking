@@ -7,4 +7,5 @@ module.exports = {
   passwordUtil: require('./password'),
   catchAsync: require('./catch-async'),
   sendMailUtil: require('./send-mail'),
+  createTemplateEmail: require('./mail-template'),
 };
