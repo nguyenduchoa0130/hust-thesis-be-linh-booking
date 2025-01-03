@@ -1,6 +1,6 @@
 const { HttpStatusCodeEnum, HttpStatusEnum } = require('../../enums');
 const { UsersService, RolesService } = require('../../services');
-const { catchAsync, errorsUtil } = require('../../utils');
+const { catchAsync, errorsUtil, passwordUtil } = require('../../utils');
 
 module.exports = {
   // GET
@@ -46,7 +46,7 @@ module.exports = {
     const hashedPassword = await passwordUtil.hash(req.body.password);
     const newUser = await UsersService.create({
       ...req.body,
-      hashedPassword: hashedPassword,
+      password: hashedPassword,
     });
     const userWithIn4 = await UsersService.getById(newUser.id);
     return res.status(HttpStatusCodeEnum.Created).json({
@@ -72,6 +72,9 @@ module.exports = {
       if (existingPhone) {
         throw errorsUtil.createBadRequest('Phone was already used');
       }
+    }
+    if (payload.password) {
+      payload.password = await passwordUtil.hash(payload.password);
     }
     await UsersService.update({ _id: req.params.userId }, payload);
     const updatedUser = await UsersService.getById(req.params.userId);
