@@ -13,7 +13,7 @@ const { ErrorHandlerMiddleware } = require('./middlewares');
 
 // Init configurations
 const app = express();
-const PORT = process.env.PORT || 8888;
+const PORT = process.env.PORT || 8080;
 
 // Mount middlewares
 app.use(cors());
@@ -24,6 +24,7 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 
 // Mount routes
 app.use('/api/auth', require('./apis/auth'));
+app.use('/api/users', require('./apis/users'));
 app.use('/api/roles', require('./apis/roles'));
 app.use('/api/tours', require('./apis/tours'));
 app.use('/api/staff', require('./apis/staff'));

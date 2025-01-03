@@ -1,7 +1,19 @@
 const crypto = require('crypto');
 const { HttpStatusEnum, HttpStatusCodeEnum, RolesEnum } = require('../../enums');
-const { UsersService, TokensService, RolesService, ForgotPasswordService } = require('../../services');
-const { catchAsync, jwtUtil, errorsUtil, passwordUtil, createTemplateEmail, sendMailUtil } = require('../../utils');
+const {
+  UsersService,
+  TokensService,
+  RolesService,
+  ForgotPasswordService,
+} = require('../../services');
+const {
+  catchAsync,
+  jwtUtil,
+  errorsUtil,
+  passwordUtil,
+  createTemplateEmail,
+  sendMailUtil,
+} = require('../../utils');
 module.exports = {
   signIn: catchAsync(async (req, res) => {
     const user = await UsersService.getOne({ email: req.body.email });
@@ -101,7 +113,7 @@ module.exports = {
     }
 
     // Delete forgot password record if mode is update
-    const deleteResult = await ForgotPasswordService.remove({ userId: user.id });
+    await ForgotPasswordService.remove({ userId: user.id });
     // Generate a 6-character confirmation code
     const confirmationCode = crypto.randomBytes(3).toString('hex');
 
@@ -130,25 +142,41 @@ module.exports = {
     const { email, password, code } = req.body;
 
     // Delete forgot password record if mode is update
-    const forgetPasswordRecord = await ForgotPasswordService.getOne({ email: email , confirmationCode: code});
+    const forgetPasswordRecord = await ForgotPasswordService.getOne({
+      email,
+      confirmationCode: code,
+    });
     if (!forgetPasswordRecord) {
       throw errorsUtil.createNotFound("Wrong code for email'" + email + "'");
     }
 
-    const user = await UsersService.getOne({ email: email });
-    console.log(JSON.stringify(user));
-    
+    const user = await UsersService.getOne({ email });
+
     // Find user by email
     if (!user) {
       throw errorsUtil.createNotFound("Can't not find any users with email '" + email + "'");
     }
     const hashedPassword = await passwordUtil.hash(password);
     await UsersService.update({ _id: user._id }, { password: hashedPassword });
+    // Generate new access token and refresh token
+    const updatedUser = await UsersService.getById(user._id);
+
+    const jwtPayload = {
+      userId: updatedUser._id,
+      email: updatedUser.email,
+      role: updatedUser.role,
+    };
+    const [accessToken, refreshToken] = await Promise.all([
+      jwtUtil.createAccessToken(jwtPayload),
+      jwtUtil.createRefreshToken(jwtPayload),
+    ]);
+    await TokensService.create({ refreshToken, email: userFullIn4.email });
 
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,
-      data: 'Change password successfully',
+      data: updatedUser,
+      accessToken,
     });
   }),
 };
