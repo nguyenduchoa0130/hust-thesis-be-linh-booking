@@ -85,7 +85,7 @@ module.exports = {
   }),
   // DELETE
   deleteTourBooking: catchAsync(async (req, res) => {
-    await TourBookingsService.delete({ _id: req.params.tourBookingId });
+    await TourBookingsService.remove({ _id: req.params.tourBookingId });
     return res.status(HttpStatusCodeEnum.NoContent).send();
   }),
   // GET

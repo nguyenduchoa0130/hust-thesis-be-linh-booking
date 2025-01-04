@@ -231,4 +231,7 @@ module.exports = {
   update: (filterQuery, changes) => {
     return TourBookingsModel.updateOne(filterQuery, changes);
   },
+  remove: (filterQuery) => {
+    return TourBookingsModel.deleteOne(filterQuery);
+  },
 };
