@@ -1,8 +1,8 @@
 const { TourCategoriesModel } = require('../models');
 
 module.exports = {
-  getAll: () => {
-    return TourCategoriesModel.find()
+  getAll: (filterQuery) => {
+    return TourCategoriesModel.find(filterQuery)
       .select({ __v: 0, createdAt: 0, updatedAt: 0 })
       .sort({ createdAt: 'desc' });
   },

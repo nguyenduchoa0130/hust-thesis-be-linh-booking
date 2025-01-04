@@ -44,6 +44,8 @@ module.exports = {
       .messages({
         [ValidationTypeEnum.Required]: 'Each detail must be a string',
       }),
+    owner: Joi.objectId().optional(),
+    tourRequest: Joi.objectId().optional(),
   }),
   tourIdSchema: Joi.object({
     id: Joi.objectId()

@@ -1,4 +1,9 @@
-const { HttpStatusCodeEnum, HttpStatusEnum, TourRequestStatusEnum } = require('../../enums');
+const {
+  HttpStatusCodeEnum,
+  HttpStatusEnum,
+  TourRequestStatusEnum,
+  TourStatusEnum,
+} = require('../../enums');
 const {
   ToursService,
   TourRequestsService,
@@ -59,7 +64,7 @@ module.exports = {
     }
     const createdDetails = await Promise.all(detailPromises);
     // Create tour
-    const requestTitle = `Req - #${tourRequest._id.toString().slice(-5)}`;
+    const requestTitle = `[Template] Req - #${tourRequest._id.toString().slice(-5)}`;
     const tourPayload = {
       name: `${requestTitle} - ${tourRequest.title}`,
       introduction: '',
@@ -70,6 +75,7 @@ module.exports = {
       transports: [],
       details: createdDetails.map((detail) => detail._id.toString()),
       owner: tourRequest?.customer?._id.toString(),
+      status: TourStatusEnum.Inactive,
     };
     const newTour = await ToursService.create(tourPayload);
     // Create tour template
@@ -77,6 +83,7 @@ module.exports = {
       title: `${requestTitle} - ${tourRequest.title}`,
       tourRequest: tourRequest._id.toString(),
       tour: newTour._id.toString(),
+      owner: tourRequest?.customer?._id.toString(),
     });
     // Return response
     return res.status(HttpStatusCodeEnum.Created).json({

@@ -1,11 +1,25 @@
 const { HttpStatusCodeEnum, HttpStatusEnum } = require('../../enums');
 const { TourSchedulesService, UsersService, ToursService } = require('../../services');
 const { tourScheduleTemplates } = require('../../templates');
-const { catchAsync, errorsUtil, sendMailUtil } = require('../../utils');
+const { catchAsync, errorsUtil, sendMailUtil, logger } = require('../../utils');
 
 module.exports = {
   // GET
   getSchedules: catchAsync(async (req, res) => {
+    const filterQuery = { $and: [] };
+    if (req.query.status) {
+      filterQuery.$and.push({
+        status: req.query.status,
+      });
+    }
+    if (req.query.startAt) {
+      filterQuery.$and.push({
+        startAt: { $gte: new Date(req.query.startAt) },
+      });
+    }
+    if (!filterQuery.$and.length) {
+      delete filterQuery.$and;
+    }
     const tourSchedules = await TourSchedulesService.getAll(req.query);
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
@@ -27,7 +41,25 @@ module.exports = {
   }),
   // GET
   getScheduleByTourId: catchAsync(async (req, res) => {
-    const tourSchedules = await TourSchedulesService.getAll({ tour: req.params.id });
+    const filterQuery = {
+      $and: [
+        {
+          tour: req.params.id,
+        },
+      ],
+    };
+    if (req.query.status) {
+      filterQuery.$and.push({
+        status: req.query.status,
+      });
+    }
+    if (req.query.startAt) {
+      filterQuery.$and.push({
+        startAt: { $gte: new Date(req.query.startAt) },
+      });
+    }
+    logger.info(`Filter query for schedules: ${JSON.stringify(filterQuery)}`);
+    const tourSchedules = await TourSchedulesService.getAll(filterQuery);
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,

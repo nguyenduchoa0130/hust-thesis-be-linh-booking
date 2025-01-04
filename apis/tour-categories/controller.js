@@ -5,7 +5,16 @@ const { catchAsync, errorsUtil } = require('../../utils');
 module.exports = {
   // GET
   getTourCategories: catchAsync(async (req, res) => {
-    const categories = await TourCategoriesService.getAll();
+    const filterQuery = {};
+    if (req.query.isCustom === 'false') {
+      const customCategory = await TourCategoriesService.getOne({
+        name: new RegExp('custom', 'i'),
+      });
+      if (customCategory) {
+        filterQuery._id = { $ne: customCategory._id };
+      }
+    }
+    const categories = await TourCategoriesService.getAll(filterQuery);
     return res.status(HttpStatusCodeEnum.Ok).json({
       status: HttpStatusEnum.Success,
       statusCode: HttpStatusCodeEnum.Ok,

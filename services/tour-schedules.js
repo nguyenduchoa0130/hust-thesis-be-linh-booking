@@ -30,6 +30,9 @@ module.exports = {
         ],
       });
   },
+  getDistinctSchedules: (filterQuery) => {
+    return TourSchedulesModel.find(filterQuery).distinct('tour');
+  },
   create: (payload) => {
     return TourSchedulesModel.create(payload);
   },

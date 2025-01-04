@@ -1,5 +1,5 @@
 const dayjs = require('dayjs');
-const { catchAsync, sendMailUtil } = require('../../utils');
+const { catchAsync, sendMailUtil, errorsUtil } = require('../../utils');
 const { TourRequestsService } = require('../../services');
 const { HttpStatusCodeEnum, HttpStatusEnum } = require('../../enums');
 const { tourRequestsTemplates } = require('../../templates');
@@ -10,6 +10,9 @@ module.exports = {
     const filterQuery = {};
     if (req.query.status) {
       filterQuery.status = req.query.status;
+    }
+    if (req.query.userId) {
+      filterQuery.customer = req.query.userId;
     }
     const requests = await TourRequestsService.getAll(filterQuery);
     return res.status(HttpStatusCodeEnum.Ok).json({

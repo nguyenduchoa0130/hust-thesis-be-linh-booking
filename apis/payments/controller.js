@@ -15,6 +15,7 @@ const {
 } = require('../../enums');
 
 module.exports = {
+  // GET
   getPayments: catchAsync(async (req, res) => {
     const filterQuery = req.query;
     const payments = await PaymentsService.getAll(filterQuery);
@@ -24,6 +25,7 @@ module.exports = {
       data: payments,
     });
   }),
+  // POST
   createPaymentWithMoMoWallet: catchAsync(async (req, res) => {
     const { tourBookingInfo, paymentInfo } = req.body;
     const paymentMethod = await PaymentMethodsService.getOne({ _id: paymentInfo.paymentMethod });
@@ -34,7 +36,7 @@ module.exports = {
     }
     try {
       logger.info('--------------------PAYMENT REQUEST BODY----------------');
-      const MO_MO_CALLBACK = '/apis/payments/mo-mo-payment-callback';
+      const MO_MO_CALLBACK = '/api/payments/mo-mo-payment-callback';
       const callbackUrl = `${req.protocol}s://${req.get('host')}${MO_MO_CALLBACK}`;
       const requestBody = createMoMoRequestBody(paymentMethod, paymentInfo, callbackUrl);
       logger.info(JSON.stringify(requestBody));
@@ -89,6 +91,7 @@ module.exports = {
       throw err;
     }
   }),
+  // POST
   handleMoMoPaymentCallback: catchAsync(async (req, res) => {
     const payment = await PaymentsService.getOne({ paymentId: req.body.orderId });
     if (!payment) {
@@ -111,6 +114,7 @@ module.exports = {
       return res.status(HttpStatusCodeEnum.NoContent).send();
     }
   }),
+  // PATCH
   updatePayment: catchAsync(async (req, res) => {
     const payload = {
       ...req.body,
@@ -136,5 +140,55 @@ module.exports = {
       statusCode: HttpStatusCodeEnum.Ok,
       data: statistics,
     });
+  }),
+  // PATCH
+  repayTourBooking: catchAsync(async (req, res) => {
+    const payment = await PaymentsService.getOne({ paymentId: req.params.paymentId });
+    if (!payment) {
+      throw errorsUtil.createNotFound('Payment not found');
+    }
+    const paymentMethod = await PaymentMethodsService.getOne({ _id: payment.paymentMethod });
+    if (!paymentMethod) {
+      throw errorsUtil.createNotFound('Payment method not found');
+    }
+    try {
+      logger.info('--------------------PAYMENT REQUEST BODY----------------');
+      const MO_MO_CALLBACK = '/api/payments/mo-mo-payment-callback';
+      const callbackUrl = `${req.protocol}s://${req.get('host')}${MO_MO_CALLBACK}`;
+      const requestBody = createMoMoRequestBody(paymentMethod, req.body, callbackUrl);
+      logger.info(JSON.stringify(requestBody));
+
+      logger.info('-------------------- PAYMENT CONFIGS ----------------');
+      const configs = {
+        method: 'POST',
+        url: `https://${paymentMethod.host}${paymentMethod.path}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(JSON.stringify(requestBody)),
+        },
+        data: JSON.stringify(requestBody),
+      };
+      logger.info(JSON.stringify(configs));
+
+      logger.info('-------------------- PAYMENT RESPONSE ----------------');
+      const { data } = await axios(configs);
+      logger.info(JSON.stringify(data));
+
+      await PaymentsService.update(
+        { _id: payment._id.toString() },
+        { paymentId: req.body.orderId },
+      );
+
+      return res.status(HttpStatusCodeEnum.Ok).json({
+        status: HttpStatusEnum.Success,
+        statusCode: HttpStatusCodeEnum.Ok,
+        data,
+      });
+    } catch (error) {
+      const err = new Error(error?.data?.message || error.message);
+      err.statusCode = error.status;
+      logger.error(error);
+      throw err;
+    }
   }),
 };

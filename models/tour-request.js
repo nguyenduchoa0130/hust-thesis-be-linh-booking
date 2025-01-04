@@ -54,6 +54,7 @@ const tourRequestSchema = new mongoose.Schema(
       ],
       default: TourRequestStatusEnum.Pending,
     },
+    tourId: { type: String, default: null },
     customerNotes: { type: String },
     customerUpdatedAt: { type: Date },
   },
