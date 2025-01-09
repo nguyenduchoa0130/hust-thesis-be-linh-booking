@@ -17,9 +17,6 @@ router
 router
   .route('/')
   .get(ctrl.getTourDestinations)
-  .post(
-    ValidationPayloadMiddleware('body', ValidationPayloadMiddleware('body', tourDestinationSchema)),
-    ctrl.createTourDestination,
-  );
+  .post(ValidationPayloadMiddleware('body', tourDestinationSchema), ctrl.createTourDestination);
 
 module.exports = router;
