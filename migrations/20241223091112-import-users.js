@@ -5,7 +5,7 @@ module.exports = {
       if (role.name !== 'customer') {
         payloads.push({
           email: `${role.name}@gmail.com`,
-          password: '$2a$10$your..................Hwj8I/FsNWM3gwxiVJ405/HISQLXWN6', // 1->6
+          password: '$2b$10$nZ/.mZ7JHwXT9J.R.xMh2eP3qPM7mD/684SyWuRh0zcMqNWnurRLe', // 1->6
           fullName: role.displayName,
           phone: role._id,
           role: role._id,
