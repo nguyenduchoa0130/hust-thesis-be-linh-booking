@@ -8,7 +8,7 @@ module.exports = {
    * @returns {Promise<string>}
    */
   hash: (password) => {
-    return bcrypt.hash(password, process.env.PASSWORD_SALT || 10);
+    return bcrypt.hash(password, 10);
   },
 
   /**
